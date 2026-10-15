@@ -1,0 +1,71 @@
+<!-- 01 · Social issue — the slur bleeds; the banned word stands at the side -->
+<section class="slide opener" data-label="Social issue">
+  <img class="opener__forest" src="assets/opener/forest.svg" alt="" aria-hidden="true">
+
+  <!-- ink that bleeds: ragged edges plus a gooey merge, so drips grow out of the letters -->
+  <svg class="opener__defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="opener-bleed" x="-10%" y="-40%" width="120%" height="260%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045 0.08" numOctaves="3" seed="4" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="ragged" />
+      <feGaussianBlur in="ragged" stdDeviation="4.5" result="soft" />
+      <feColorMatrix in="soft" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo" />
+      <feGaussianBlur in="goo" stdDeviation="9" result="halo" />
+      <feComponentTransfer in="halo" result="seep"><feFuncA type="linear" slope="0.3" /></feComponentTransfer>
+      <feMerge><feMergeNode in="seep" /><feMergeNode in="goo" /></feMerge>
+    </filter>
+  </svg>
+
+  <span class="eyebrow opener__eyebrow" data-reveal>Social issue</span>
+
+  <div class="opener__body">
+    <p class="opener__lead" data-reveal style="--i:1">Imagine being dehumanized and called a</p>
+
+    <p class="opener__slur" data-reveal style="--i:3" aria-label="Monkey">
+      <span class="slur" aria-hidden="true">
+        <span class="slur__ch">M<i class="drip" style="--x:14%; --len:4.2cqw; --d:0.95s"><b></b></i><i class="drip" style="--x:84%; --len:5.2cqw; --d:1.25s"><b></b></i></span>
+        <span class="slur__ch">O<i class="drip" style="--x:48%; --len:2.6cqw; --d:1.6s"><b></b></i></span>
+        <span class="slur__ch">N<i class="drip" style="--x:13%; --len:5.6cqw; --d:1.05s"><b></b></i></span>
+        <span class="slur__ch">K<i class="drip" style="--x:16%; --len:3.4cqw; --d:1.45s"><b></b></i><i class="drip" style="--x:83%; --len:5.4cqw; --d:1.15s"><b></b></i></span>
+        <span class="slur__ch">E<i class="drip" style="--x:24%; --len:4.8cqw; --d:1.35s"><b></b></i></span>
+        <span class="slur__ch">Y<i class="drip" style="--x:50%; --len:6.2cqw; --d:1s"><b></b></i></span>
+        <i class="spatter" style="--sx:-3%; --sy:18%; --s:0.9cqw"></i>
+        <i class="spatter" style="--sx:101%; --sy:8%; --s:0.6cqw"></i>
+        <i class="spatter" style="--sx:97%; --sy:-6%; --s:0.5cqw"></i>
+      </span>
+    </p>
+
+    <p class="opener__line" data-reveal style="--i:9">just for speaking your native language.</p>
+
+    <p class="opener__sub" data-reveal style="--i:11">
+      Sign language is the native language of <b>70 million Deaf people.</b> Yet society silences them.
+    </p>
+
+    <ul class="opener__proof" data-reveal style="--i:13">
+      <li><b>1933</b> Deaf schools ordered to teach by speech alone</li>
+      <li><b>1990s</b> Children still scolded for signing</li>
+      <li><b>2024</b> Court: no guaranteed right to be taught in sign</li>
+    </ul>
+  </div>
+
+  <img class="opener__monkey" src="assets/opener/monkey.webp" alt="" data-reveal style="--i:6">
+
+  <div class="opener__column" role="img" aria-label="A hanging scroll reading 手真似, te-mane, mocked as monkey imitation, stamped 禁止, forbidden">
+    <div class="scroll" data-reveal style="--i:5" aria-hidden="true">
+      <span class="scroll__rod"></span>
+      <div class="scroll__mount">
+        <div class="scroll__paper">
+          <span class="opener__kanji brush">
+            <span class="opener__char" data-reveal style="--i:16">手</span>
+            <span class="opener__char" data-reveal style="--i:18">真</span>
+            <span class="opener__char" data-reveal style="--i:20">似</span>
+          </span>
+          <span class="stamp brush opener__stamp" data-reveal style="--i:24">禁止</span>
+        </div>
+      </div>
+      <span class="scroll__rod scroll__rod--bottom"></span>
+    </div>
+    <span class="caption opener__gloss" data-reveal style="--i:22" aria-hidden="true"><i>te-mane</i><br>“monkey imitation”<br>banned 60 years</span>
+  </div>
+
+  <p class="caption close__foot close__foot--left opener__foot" data-reveal style="--i:15">Sources: World Federation of the Deaf · SODANE (2025) · Masuda City staff training (2025) · Anthropology News</p>
+</section>

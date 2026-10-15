@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Design tokens — kotoSay pitch deck
+   Layout: one 16:9 stage that pages sideways on a spring; every size is cqw
+   (1cqw = 1% of the slide width). Reference canvas: 1600 × 900, 1cqw = 16px.
+   Identity comes from the logo: washi-paper cream, sumi-ink type and brush
+   marks, and the violet → pink "voice" waves.
+     violet = Deaf signer → voice     pink = hearing reply → avatar signs back
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Paper and cards */
+  --bg: #f6f1e7;                  /* the logo's paper */
+  --surface-1: #fffcf6;           /* cards */
+  --surface-2: #efe8da;           /* featured card / core node */
+  --surface-3: #e5ddcc;           /* chips, number discs */
+  --hairline: rgba(23, 21, 15, 0.09);
+  --hairline-strong: rgba(23, 21, 15, 0.16);
+  --shadow-card: 0 0.1cqw 0.3cqw rgba(60, 45, 20, 0.05), 0 1.2cqw 3cqw rgba(60, 45, 20, 0.07);
+
+  /* Ink — all ≥ 4.5:1 on paper and cards (statement grey: large type only, 3.3:1) */
+  --ink-1: #17150f;               /* sumi ink: headlines, bold keywords */
+  --ink-2: #4a453b;               /* body */
+  --ink-3: #6b655a;               /* captions and sources */
+  --ink-statement: #8a8374;       /* the soft half of a two-tone statement */
+
+  /* Voice colours, sampled from the logo's waves */
+  --sign: #7a4fe7;                /* fills, dots */
+  --sign-ink: #6a43de;            /* violet for small text (5.1:1) */
+  --sign-soft: rgba(122, 79, 231, 0.09);
+  --sign-glow: rgba(122, 79, 231, 0.16);
+  --reply: #e05c97;               /* fills, dots */
+  --reply-ink: #b83a73;           /* pink for small text (4.8:1) */
+  --reply-soft: rgba(224, 92, 151, 0.10);
+  --stamp: #c8325f;               /* hanko red-pink, from the end of the voice gradient */
+  --voice: linear-gradient(90deg, #7a4fe7 0%, #b155bb 55%, #e05c97 100%);
+  --neutral-fill: #e5ddcc;        /* chart: cost segment */
+
+  /* Type — system fonts for reading; one brush face for Japanese accents */
+  --font: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text",
+          "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI",
+          "Meiryo", "Noto Sans JP", system-ui, sans-serif;
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont,
+          "Segoe UI Variable Display", "Segoe UI", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", "Noto Sans JP",
+          system-ui, sans-serif;
+  --font-brush: "Yuji Boku", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+
+  /* Radii */
+  --r-sm: 0.75cqw;
+  --r-md: 1.25cqw;
+  --r-lg: 1.75cqw;
+
+  /* Motion — non-gesture reveals only. Slide paging uses real springs (spring.js). */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

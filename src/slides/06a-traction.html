@@ -1,0 +1,60 @@
+<!-- 06 · Traction — recognized first, then the work behind it: effort in, results out -->
+<section class="slide proof" data-label="Traction">
+  <header class="proof__head">
+    <span class="eyebrow" data-reveal>Validation &amp; traction · Product</span>
+    <h2 class="proof__title" data-reveal style="--i:1">Built. Shipped. <span class="proof__title-key">Recognized.</span></h2>
+  </header>
+
+  <!-- the hanko: 承認, "approved", slammed on as the slide arrives; the filter wears the ink like a real seal -->
+  <svg class="proof__defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="proof-ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise" />
+      <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.3" result="wear" />
+      <feComposite in="SourceGraphic" in2="wear" operator="in" />
+    </filter>
+  </svg>
+  <span class="proof__seal" role="img" aria-label="承認, approved" data-reveal style="--i:5">
+    <span class="proof__seal-ink" aria-hidden="true"><span>承</span><span>認</span></span>
+  </span>
+
+  <div class="proof__awards">
+    <figure class="proof__award" data-reveal style="--i:2">
+      <img class="proof__photo" src="assets/awards/kitahack.jpg" alt="The team with the KitaHack 2026 1st Runner-Up cheque" style="object-position: 50% 42%" />
+      <figcaption>
+        <span class="proof__event">Google KitaHack 2026</span>
+        <span class="proof__place">1st Runner-Up</span>
+      </figcaption>
+    </figure>
+    <figure class="proof__award" data-reveal style="--i:3">
+      <img class="proof__photo" src="assets/awards/muba.jpg" alt="The team on stage at MUBA Hackathon 2026" style="object-position: 50% 78%" />
+      <figcaption>
+        <span class="proof__event">MUBA Hackathon 2026</span>
+        <span class="proof__place">1st Runner-Up</span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="proof__data">
+    <div class="proof__stat" data-reveal style="--d:0.5s">
+      <p class="proof__value"><i class="num" data-count="400" data-count-delay="600" data-count-duration="1800">400</i><span>+ hrs</span></p>
+      <p class="proof__label">of model training</p>
+    </div>
+    <div class="proof__stat" data-reveal style="--d:0.9s">
+      <p class="proof__value"><i class="num" data-count="1.4" data-count-delay="1000" data-count-duration="1800">1.4</i><span>M</span></p>
+      <p class="proof__label">parameters</p>
+    </div>
+    <div class="proof__stat" data-reveal style="--d:1.3s">
+      <p class="proof__value"><i class="num" data-count="39" data-count-delay="1400" data-count-duration="1800">39</i><span>k+</span></p>
+      <p class="proof__label">sign language clips</p>
+    </div>
+    <svg class="proof__arrow" viewBox="0 0 40 16" aria-hidden="true" data-reveal style="--d:2.1s"><path d="M2 8h34M30 2l7 6-7 6" /></svg>
+    <div class="proof__stat proof__stat--result" data-reveal style="--d:2.5s">
+      <p class="proof__value"><i class="num" data-count="94.9" data-count-delay="2600" data-count-duration="2000">94.9</i><span>%</span></p>
+      <p class="proof__label">accuracy</p>
+    </div>
+    <div class="proof__stat proof__stat--result" data-reveal style="--d:2.9s">
+      <p class="proof__value"><span class="proof__pre">&lt;</span><i class="num" data-count="3" data-count-from="120" data-count-delay="3000" data-count-duration="2000">3</i><span>ms</span></p>
+      <p class="proof__label">to translate a sign</p>
+    </div>
+  </div>
+</section>

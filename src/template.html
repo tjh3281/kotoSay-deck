@@ -1,0 +1,46 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kotoSay Pitch Deck</title>
+<meta name="description" content="kotoSay: a two-way sign language interpreter in your pocket. Pitch deck for the Tokyo Global Innovation Challenge 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap">
+<style>
+/*@STYLES@*/
+</style>
+</head>
+<body>
+
+<main class="stage" id="stage" aria-roledescription="carousel" aria-label="kotoSay pitch deck">
+  <div class="track" id="track">
+<!--@SLIDES@-->
+  </div>
+</main>
+
+<nav class="chrome" id="chrome" aria-label="Slide controls">
+  <button class="chrome__btn" id="prev" type="button" aria-label="Previous slide">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" /></svg>
+  </button>
+  <div class="chrome__where" aria-hidden="true">
+    <span class="chrome__count" id="count"></span>
+    <span class="chrome__label" id="label"></span>
+  </div>
+  <div class="chrome__dots" id="dots"></div>
+  <button class="chrome__btn" id="next" type="button" aria-label="Next slide">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 5.5 16 12l-6.5 6.5" /></svg>
+  </button>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <button class="chrome__btn" id="fullscreen" type="button" aria-label="Enter full screen (F)">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9V4.5H9M19.5 9V4.5H15M4.5 15v4.5H9M19.5 15v4.5H15" /></svg>
+  </button>
+</nav>
+
+<div class="sr-only" id="announcer" aria-live="polite"></div>
+
+<script>
+/*@SCRIPTS@*/
+</script>
+</body>
+</html>

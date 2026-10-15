@@ -1,0 +1,184 @@
+/* ==========================================================================
+   Deck — 16:9 stage, horizontal track, floating translucent controls
+   ========================================================================== */
+
+body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  height: 100%;
+}
+body.is-idle { cursor: none; }
+
+/* The stage is the size container: every cqw inside resolves against it. */
+.stage {
+  position: relative;
+  width: min(100vw, calc(100dvh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--bg);
+  container-type: inline-size;
+  touch-action: pan-y;          /* horizontal gestures come to us */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.track {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 4.75cqw 6.25cqw 6.25cqw;
+}
+
+/* ---------- Entrance reveals (not gesture-driven, so CSS is fine) ---------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 1.1cqw, 0);
+  transition:
+    opacity 0.55s var(--ease-out),
+    transform 0.75s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms + 60ms);
+}
+.slide.is-visible [data-reveal] { opacity: 1; transform: none; }
+
+/* ---------- Floating controls: a dark translucent material ---------- */
+.chrome {
+  position: fixed;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255, 252, 246, 0.74);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(23, 21, 15, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),   /* light catching the top edge */
+    0 10px 30px rgba(23, 21, 15, 0.12);
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 0.32s var(--ease-out),
+    transform 0.42s var(--ease-out),
+    filter 0.32s var(--ease-out);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+/* Materialize, don't just fade: blur + scale travel with opacity */
+.chrome.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px) scale(0.96);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.chrome__btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-1);
+  cursor: pointer;
+  transition: transform 0.1s ease-out, background-color 0.15s ease-out;
+}
+.chrome__btn:hover { background: rgba(23, 21, 15, 0.06); }
+/* Feedback lives on the press, and it's instant */
+.chrome__btn:active { transform: scale(0.92); background: rgba(23, 21, 15, 0.1); transition-duration: 0s; }
+.chrome__btn:disabled { opacity: 0.32; cursor: default; }
+.chrome__btn:disabled:active { transform: none; background: transparent; }
+.chrome__btn svg { width: 18px; height: 18px; }
+.chrome__btn .icon { stroke-width: 2; }
+
+.stage.is-dragging { cursor: grabbing; }
+
+.chrome__where {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 10px;
+  min-width: 168px;
+  white-space: nowrap;
+}
+.chrome__count { color: var(--ink-1); font-weight: 600; font-variant-numeric: tabular-nums; }
+.chrome__label { color: var(--ink-2); }
+
+.chrome__dots { display: flex; align-items: center; padding: 0 4px; }
+.chrome__dot {
+  position: relative;
+  width: 16px;
+  height: 28px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.chrome__dot::before {               /* small visual dot, generous hit area */
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 999px;
+  background: rgba(23, 21, 15, 0.22);
+  transition: transform 0.2s var(--ease-out), background-color 0.2s ease-out;
+}
+.chrome__dot:hover::before { background: rgba(23, 21, 15, 0.5); }
+.chrome__dot:active::before { transform: scale(0.8); transition-duration: 0s; }
+.chrome__dot[aria-current="true"]::before { background: var(--ink-1); transform: scale(1.25); }
+
+.chrome__sep { width: 1px; height: 20px; background: rgba(23, 21, 15, 0.12); margin: 0 2px; }
+
+:focus-visible { outline: 2px solid var(--ink-1); outline-offset: 2px; }
+
+@media (max-width: 720px) {
+  .chrome__dots, .chrome__sep { display: none; }
+  .chrome__where { min-width: 0; }
+}
+
+/* ---------- Accessibility preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transform: none; transition: opacity 0.2s ease; transition-delay: 0s; }
+  .chrome, .chrome.is-hidden { transition: opacity 0.2s ease; transform: translateX(-50%); filter: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .chrome { background: #fffcf6; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .phone__play { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: #fffcf6 !important; }
+}
+@media (prefers-contrast: more) {
+  .chrome { background: #fffcf6; border-color: var(--ink-3); }
+  :root { --hairline: rgba(23, 21, 15, 0.3); --ink-2: #3a362e; --ink-3: #4a453b; --ink-statement: #5f594d; }
+}
+
+/* ---------- Print / Save as PDF: one slide per page ---------- */
+@page { size: 1600px 900px; margin: 0; }
+@media print {
+  html, body { height: auto; overflow: visible; display: block; background: var(--bg); }
+  .stage { width: 1600px; aspect-ratio: auto; overflow: visible; }
+  .track { display: block; transform: none !important; }
+  .slide {
+    width: 1600px; height: 900px; opacity: 1 !important;
+    break-after: page; page-break-after: always;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .chrome { display: none; }
+  .phone__play { display: none !important; }   /* the PDF shows the video's poster frame */
+  .hero__glow { display: none !important; }            /* large radial gradients band in PDF output */
+}
