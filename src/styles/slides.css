@@ -392,21 +392,24 @@
 /* the map: signer | → | kotoSay | → | hearing person, out on top in violet, back below in pink.
    The rows add up to the kotoSay column's width, so the panel is a true square. */
 .how__map {
-  --core: 21cqw;
+  /* the whole loop scales from one number: the kotoSay square (21cqw in the first design).
+     24cqw is as wide as the side labels allow; on a taller slide the loop is centred in the extra height */
+  --core: 24cqw;
   display: grid;
-  grid-template-columns: 1fr 5.6cqw var(--core) 5.6cqw 1fr;
-  grid-template-rows: 6cqw 7.5cqw 7.5cqw;   /* 6 + 7.5 + 7.5 = 21 */
+  grid-template-columns: 1fr calc(var(--core) * 5.6 / 21) var(--core) calc(var(--core) * 5.6 / 21) 1fr;
+  grid-template-rows: calc(var(--core) * 6 / 21) calc(var(--core) * 7.5 / 21) calc(var(--core) * 7.5 / 21);
   column-gap: 1.4cqw; row-gap: 0;
   align-items: center;
+  margin: auto 0;                          /* centred in the space under the WFD line */
 }
 .how__who {
   grid-row: 1; display: flex; align-items: center; gap: 0.8cqw;
-  font-size: 1.3cqw; line-height: 1; font-weight: 600; letter-spacing: 0.005em; color: var(--ink-2);
+  font-size: calc(var(--core) * 1.3 / 21); line-height: 1; font-weight: 600; letter-spacing: 0.005em; color: var(--ink-2);
 }
 .how__who--left { grid-column: 1; justify-content: flex-end; }
 .how__who--right { grid-column: 5; justify-content: flex-start; }
 /* sign language, then the app, then hearing: one tile shape, one size */
-.how__badge, .how__app { flex: none; width: 3.6cqw; height: 3.6cqw; border-radius: 22.5%; }
+.how__badge, .how__app { flex: none; width: calc(var(--core) * 3.6 / 21); height: calc(var(--core) * 3.6 / 21); border-radius: 22.5%; }
 .how__badge { padding: 0.35cqw; object-fit: contain; background: #fffcf6; }   /* the uploaded icons, on the same cream tile as the app icon */
 .how__badge, .how__app { box-shadow: 0 0.1cqw 0.3cqw rgba(60, 45, 20, 0.14); }
 
@@ -423,23 +426,23 @@
     0 1cqw 2cqw rgba(60, 45, 20, 0.08);
 }
 .how__core::after {                     /* hairline between the two directions */
-  content: ""; position: absolute; left: 12%; right: 12%; top: calc(6cqw + 7.5cqw);
+  content: ""; position: absolute; left: 12%; right: 12%; top: calc(var(--core) * 13.5 / 21);
   border-top: 1px solid var(--hairline-strong);
 }
-.how__core-head { height: 6cqw; display: flex; align-items: center; justify-content: center; gap: 0.8cqw; }
-.how__mark { font-size: 2.2cqw; line-height: 1; }
+.how__core-head { height: calc(var(--core) * 6 / 21); display: flex; align-items: center; justify-content: center; gap: 0.8cqw; }
+.how__mark { font-size: calc(var(--core) * 2.2 / 21); line-height: 1; }
 .how__lane--out { grid-row: 2; }
 .how__lane--back { grid-row: 3; }
 .how__end, .how__step { position: relative; z-index: 1; }
 .how__end {
-  font-size: 1.75cqw; line-height: 1.22; letter-spacing: -0.015em; font-weight: 600; color: var(--ink-1);
+  font-size: calc(var(--core) * 1.75 / 21); line-height: 1.22; letter-spacing: -0.015em; font-weight: 600; color: var(--ink-1);
   white-space: nowrap;
 }
 .how__end--left { text-align: right; }
 .how__end--right { text-align: left; }
 .how__step {
-  grid-column: 3; padding: 0 2.2cqw;
-  text-align: center; font-size: 1.4cqw; line-height: 1.3; color: var(--ink-2); text-wrap: balance;
+  grid-column: 3; padding: 0 calc(var(--core) * 2.2 / 21);
+  text-align: center; font-size: calc(var(--core) * 1.4 / 21); line-height: 1.3; color: var(--ink-2); text-wrap: balance;
 }
 .how__step em { font-style: normal; font-weight: 700; color: var(--ink-1); }
 .how__arrow { width: 100%; height: auto; overflow: visible; }
@@ -454,6 +457,7 @@
 
 /* the WFD & WASLI concerns, answered in one quiet line under the title, ruled off from the map below */
 .how__fixes {
+  margin-top: clamp(2cqw, 5cqh, 3.6cqw);
   display: flex; align-items: center; gap: 3cqw;
   padding-bottom: 1.5cqw; border-bottom: 1px solid var(--hairline-strong);
 }
@@ -1586,8 +1590,8 @@
 
 /* the dashcam, as a CCTV monitor */
 .witness__cam {
-  position: absolute; z-index: 3; right: 4.5cqw; bottom: 6.5cqw;
-  width: 15cqw; aspect-ratio: 452 / 442; margin: 0; overflow: hidden;
+  position: absolute; z-index: 3; right: 4cqw; bottom: 5.5cqw;
+  width: clamp(18cqw, 31cqh, 21cqw); aspect-ratio: 452 / 442; margin: 0; overflow: hidden;
   border: 0.3cqw solid #161a20; border-radius: 0.4cqw;
   box-shadow: 0 1.4cqw 2.4cqw rgba(0, 0, 0, 0.6);
 }
@@ -1603,7 +1607,7 @@
 .witness__hud {
   position: absolute; left: 0.5cqw; bottom: 0.5cqw; z-index: 1;
   padding: 0.3cqw 0.45cqw; border-radius: 0.25cqw; background: rgba(5, 7, 10, 0.72);
-  font-family: var(--font-mono); font-size: 0.72cqw; line-height: 1; letter-spacing: 0.06em;
+  font-family: var(--font-mono); font-size: 0.9cqw; line-height: 1; letter-spacing: 0.06em;
   color: #f1ece2; text-shadow: 0 0 0.3cqw rgba(0, 0, 0, 0.9);
 }
 .witness__rec { color: var(--wound); font-weight: 700; margin-right: 0.4em; }
@@ -1616,27 +1620,27 @@
 
 /* the text side. On a slide taller than 16:9 (full screen) only the gaps grow with the height (cqh),
    so the story fills the slide down to the bottom; the type stays the same size. */
-.witness__text { position: relative; z-index: 2; max-width: 44cqw; }
+.witness__text { position: relative; z-index: 2; max-width: 56cqw; }
 .witness__eyebrow { color: var(--wound); }
 .witness__title {
   font-family: var(--font-display);
-  font-size: 4.4cqw; line-height: 1; letter-spacing: -0.035em; font-weight: 700; color: var(--pale);
+  font-size: clamp(5.2cqw, 9.2cqh, 5.8cqw); line-height: 1; letter-spacing: -0.035em; font-weight: 700; color: var(--pale);
 }
-.witness__lede { margin-top: clamp(0.9cqw, 2.2cqh, 1.6cqw); font-size: 1.6cqw; line-height: 1.4; color: rgba(241, 236, 226, 0.78); text-wrap: pretty; }
+.witness__lede { margin-top: clamp(0.9cqw, 2.2cqh, 1.6cqw); font-size: clamp(1.8cqw, 3.1cqh, 1.95cqw); line-height: 1.4; color: rgba(241, 236, 226, 0.78); text-wrap: pretty; }
 .witness__lede b { color: var(--pale); font-weight: 700; }
-.witness__log { margin-top: clamp(2.2cqw, 6.5cqh, 4.6cqw); }
+.witness__log { margin-top: clamp(1.8cqw, 4.6cqh, 3.8cqw); }
 .witness__log li {
-  padding: clamp(0.75cqw, 2.4cqh, 1.7cqw) 0; border-top: 1px solid rgba(241, 236, 226, 0.13);
-  font-size: 1.5cqw; line-height: 1.35; color: rgba(241, 236, 226, 0.82);
+  padding: clamp(0.7cqw, 2.3cqh, 1.6cqw) 0; border-top: 1px solid rgba(241, 236, 226, 0.13);
+  font-size: clamp(1.75cqw, 3cqh, 1.9cqw); line-height: 1.35; color: rgba(241, 236, 226, 0.82);
 }
 .witness__log strong { color: var(--pale); font-weight: 700; }
 .witness__now { color: var(--pale); }
 .witness__now b { color: var(--wound); font-weight: 700; }
 
 .witness__punch {
-  margin-top: clamp(2.4cqw, 7cqh, 5cqw);
+  margin-top: clamp(2cqw, 5.8cqh, 4.2cqw);
   font-family: var(--font-display);
-  font-size: 2.6cqw; line-height: 1.2; letter-spacing: -0.025em; font-weight: 700; color: var(--pale);
+  font-size: clamp(2.9cqw, 5.2cqh, 3.1cqw); line-height: 1.2; letter-spacing: -0.025em; font-weight: 700; color: var(--pale);
 }
 /* "silence it." loses the signal: it splits into red and cyan, jitters, then settles blurred and faded */
 .signal-lost { position: relative; display: inline-block; --sig: 1.5s; }
@@ -1673,7 +1677,7 @@
   80% { clip-path: inset(15% 0 55% 0); transform: translateX(0.06em); }
   100% { opacity: 0.55; clip-path: inset(0); transform: translateX(0.045em); }
 }
-.witness__source { margin-top: clamp(1.8cqw, 4cqh, 2.8cqw); color: rgba(241, 236, 226, 0.5); }
+.witness__source { margin-top: clamp(1.4cqw, 3cqh, 2.2cqw); font-size: 1.1cqw; color: rgba(241, 236, 226, 0.5); }
 
 @media (prefers-reduced-motion: reduce) {
   .witness__photo, .slide.is-visible .witness__photo { transform: none; transition: none; }
