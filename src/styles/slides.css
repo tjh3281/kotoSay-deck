@@ -121,8 +121,10 @@
   background: radial-gradient(closest-side, var(--sign-glow), rgba(122, 79, 231, 0) 100%);
   pointer-events: none;
 }
+/* On a slide taller than the phones (full screen), the column stretches down to the bottom of the slide:
+   only the gaps between its three groups grow, so the bottom of the slide is used. */
 .hero__text {
-  position: relative; flex: 1 1 0; min-width: 0; height: var(--phone-h);
+  position: relative; flex: 1 1 0; min-width: 0; height: max(var(--phone-h), calc(100% - 0.45cqw));
   align-self: flex-start;          /* title in the top-left corner; the phones stay centred */
   margin-top: 0.45cqw;             /* its eyebrow has no leading: line its ink up with every other slide */
   display: flex; flex-direction: column; justify-content: space-between;
@@ -170,6 +172,7 @@
 .phone__label { position: absolute; left: 0; right: 0; top: calc(100% + 1.4cqw); text-align: center; color: var(--sign-ink); font-size: 1.2cqw; line-height: 1.3; font-weight: 700; }
 .phone__label span { display: block; margin-top: 0.2cqw; font-size: 1.05cqw; font-weight: 500; color: var(--ink-3); }
 .phone--avatar .phone__label { color: var(--reply-ink); }
+.phone__label .phone__name { display: inline; margin: 0; font-size: inherit; font-weight: 700; color: var(--reply-ink); }   /* the avatar's name */
 /* the loop between the phones: out in violet, back in pink, drawn once the phones are up */
 .hero__loop { flex: none; width: 4.6cqw; height: auto; overflow: visible; }
 .hero__loop path {
@@ -229,7 +232,7 @@
    sides: violet out (sign → voice), pink back (text → sign). 実演, "live demo",
    is stamped beside the title and written large and faint behind the phone. */
 .demo {
-  --phone-h: 41cqw;
+  --phone-h: max(41cqw, 100cqh - 14cqw);   /* grows with the slide's height (full screen), never below 41cqw */
   align-items: center; justify-content: center;
   padding-top: 3.4cqw; padding-bottom: 3.4cqw;
   padding-left: 6.25cqw;           /* even sides keep the phone dead centre; the title is placed on its own */
@@ -319,6 +322,7 @@
 .demo__label { color: var(--sign-ink); font-family: var(--font-display); font-size: 1.7cqw; line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
 .demo__label span { display: block; margin-top: 0.35cqw; font-family: var(--font); font-size: 1.15cqw; line-height: 1.3; letter-spacing: 0; font-weight: 500; color: var(--ink-3); }
 .demo__side--reply .demo__label { color: var(--reply-ink); }
+.demo__label .demo__name { font-weight: 700; color: var(--reply-ink); }   /* the avatar's name */
 
 /* sound · progress · time, in the deck's floating paper pill */
 .demo__meter {
@@ -525,31 +529,34 @@
   .proof__seal[data-reveal] { opacity: 0.92 !important; transform: rotate(-12deg) !important; }
 }
 .proof__awards { margin-top: auto; display: grid;          /* awards + data centred in the space below the title */ grid-template-columns: 1fr 1fr; column-gap: 3cqw; }
-.proof__award { margin: 0; display: grid; grid-template-columns: 12.5cqw 1fr; column-gap: 1.8cqw; align-items: center; }
+.proof__award { margin: 0; display: grid; grid-template-columns: 24cqw 1fr; column-gap: 2.2cqw; align-items: center; }
+/* On a screen taller than 16:9 the slide grows taller (cqh); the photos, gaps and type grow
+   with it so the block keeps filling the slide. At 16:9 every clamp sits at its minimum. */
 .proof__photo {
-  display: block; width: 12.5cqw; height: 9.4cqw; object-fit: cover;
+  display: block; width: 24cqw; height: clamp(16.5cqw, 33cqh, 24cqw); object-fit: cover;
   border-radius: var(--r-lg); box-shadow: var(--shadow-card), 0 1.6cqw 3.2cqw rgba(60, 45, 20, 0.12);
 }
-.proof__event { display: block; font-size: 1.2cqw; line-height: 1.3; font-weight: 600; letter-spacing: 0.005em; color: var(--ink-3); }
+.proof__event { display: block; font-size: clamp(1.4cqw, 2.5cqh, 1.6cqw); line-height: 1.3; font-weight: 600; letter-spacing: 0.005em; color: var(--ink-3); }
 .proof__place {
-  display: block; margin-top: 0.4cqw;
+  display: block; margin-top: 0.5cqw;
   font-family: var(--font-display);
-  font-size: 2.3cqw; line-height: 1.05; letter-spacing: -0.028em; font-weight: 700; color: var(--ink-1);
+  font-size: 2.7cqw; line-height: 1.05; letter-spacing: -0.028em; font-weight: 700; color: var(--ink-1); white-space: nowrap;
 }
 
 .proof__data {
-  margin: 4.2cqw 0 auto;
+  --stat-pad: clamp(1.4cqw, 2.6cqh, 2.2cqw);
+  margin: clamp(5cqw, 9cqh, 8cqw) 0 auto;
   display: grid; grid-template-columns: repeat(3, 1fr) 3.6cqw repeat(2, 1fr);
   column-gap: 1.6cqw; align-items: start;
 }
-.proof__stat { padding-top: 1.4cqw; border-top: 1px solid var(--hairline-strong); }
+.proof__stat { padding-top: var(--stat-pad); border-top: 1px solid var(--hairline-strong); }
 /* the numbers arrive one by one, effort first, results last (count timing lives in the markup) */
 .proof__data [data-reveal] { transition-duration: 0.7s, 0.9s; transition-delay: var(--d, 0s); }
 @media (prefers-reduced-motion: reduce) { .proof__data [data-reveal] { transition-delay: 0s; } }
 .proof__stat--result { border-top: 2px solid transparent; border-image: var(--voice) 1; }
 .proof__value {
   font-family: var(--font-display);
-  font-size: 5cqw; line-height: 1; letter-spacing: -0.04em; font-weight: 700;
+  font-size: 6cqw; line-height: 1; letter-spacing: -0.04em; font-weight: 700;
   color: var(--ink-1); font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .proof__value span { margin-left: 0.06em; font-size: 0.45em; letter-spacing: -0.01em; font-weight: 600; color: var(--ink-3); }
@@ -558,9 +565,9 @@
   background: var(--voice); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
 }
-.proof__label { margin-top: 0.8cqw; font-size: 1.4cqw; line-height: 1.3; color: var(--ink-2); }
+.proof__label { margin-top: 0.9cqw; font-size: clamp(1.6cqw, 2.9cqh, 1.8cqw); line-height: 1.3; color: var(--ink-2); }
 .proof__arrow {
-  width: 100%; height: auto; margin-top: 3.7cqw;
+  width: 100%; height: auto; margin-top: calc(var(--stat-pad) + 2.8cqw);   /* level with the numbers */
   fill: none; stroke: var(--ink-3); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
 }
 
@@ -627,26 +634,27 @@
   padding-bottom: 0.1em;
 }
 
+/* taller than 16:9 (full screen): sizes grow with the height (cqh); each clamp's minimum is the 16:9 size */
 .gap__body { margin-top: auto; padding-top: 2.4cqw; display: grid; grid-template-columns: 1fr 1fr; column-gap: 4cqw; align-items: stretch; }
 .gap__compare { display: flex; flex-direction: column; justify-content: center; }
-.gap__row { padding: 1.6cqw 0; border-top: 1px solid var(--hairline-strong); }
+.gap__row { padding: clamp(1.6cqw, 3.6cqh, 2.6cqw) 0; border-top: 1px solid var(--hairline-strong); }
 .gap__row:last-child { border-bottom: 1px solid var(--hairline-strong); }
-.gap__who { display: block; font-size: 1.05cqw; line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.gap__who { display: block; font-size: clamp(1.05cqw, 1.65cqh, 1.2cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .gap__fig {
   margin-top: 0.6cqw;
   font-family: var(--font-display);
   line-height: 1; letter-spacing: -0.04em; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .gap__fig span { margin-left: 0.12em; font-size: 0.42em; letter-spacing: -0.015em; font-weight: 700; }
-.gap__line { margin-top: 0.6cqw; font-size: 1.5cqw; line-height: 1.35; }
+.gap__line { margin-top: 0.6cqw; font-size: clamp(1.5cqw, 2.4cqh, 1.7cqw); line-height: 1.35; }
 /* America: served, so it stays quiet */
 .gap__row--them .gap__who { color: var(--ink-3); }
-.gap__row--them .gap__fig { font-size: 3cqw; color: var(--ink-3); }
+.gap__row--them .gap__fig { font-size: clamp(3cqw, 5.4cqh, 3.8cqw); color: var(--ink-3); }
 .gap__row--them .gap__line { color: var(--ink-3); }
 .gap__row--them strong { font-weight: 600; color: var(--ink-2); }
 /* Asia: not served, so it is the loudest thing on the left */
 .gap__row--us .gap__who { color: var(--stamp); }
-.gap__row--us .gap__fig { font-size: 6.4cqw; color: var(--ink-1); }
+.gap__row--us .gap__fig { font-size: clamp(6.4cqw, 11cqh, 7.6cqw); color: var(--ink-1); }
 .gap__row--us .gap__fig span { color: var(--ink-1); }
 .gap__row--us .gap__line { color: var(--ink-2); }
 .gap__row--us strong { font-weight: 700; color: var(--stamp); }
@@ -654,7 +662,7 @@
 /* Japan: the glowing target */
 .gap__japan {
   display: flex; flex-direction: column; justify-content: center;
-  padding: 2.4cqw 2.8cqw; border-radius: 2cqw;
+  padding: clamp(2.4cqw, 4.8cqh, 3.6cqw) 2.8cqw; border-radius: 2cqw;
   background: var(--surface-1);
   box-shadow:
     0 0 0 1px rgba(196, 176, 255, 0.45),
@@ -665,13 +673,13 @@
 }
 .gap__japan-top { display: flex; align-items: center; gap: 0.9cqw; }
 .gap__flag { flex: none; width: 2.4cqw; height: 1.6cqw; border-radius: 0.2cqw; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.16); }
-.gap__japan-tag { font-size: 1.05cqw; line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
-.gap__act { margin-top: 1cqw; font-size: 1.6cqw; line-height: 1.35; color: var(--ink-2); text-wrap: balance; }
+.gap__japan-tag { font-size: clamp(1.05cqw, 1.65cqh, 1.2cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
+.gap__act { margin-top: clamp(1cqw, 2cqh, 1.5cqw); font-size: clamp(1.6cqw, 2.5cqh, 1.8cqw); line-height: 1.35; color: var(--ink-2); text-wrap: balance; }
 .gap__act strong { font-weight: 700; color: var(--ink-1); }
 .gap__yen {
-  margin-top: 1.2cqw;
+  margin-top: clamp(1.2cqw, 2.6cqh, 2cqw);
   font-family: var(--font-display);
-  font-size: 9cqw; line-height: 0.95; letter-spacing: -0.05em; font-weight: 800; font-variant-numeric: tabular-nums;
+  font-size: clamp(9cqw, 15cqh, 11cqw); line-height: 0.95; letter-spacing: -0.05em; font-weight: 800; font-variant-numeric: tabular-nums;
   background: var(--voice); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
   padding-bottom: 0.06em;
@@ -680,10 +688,10 @@
 .gap__only {
   margin-top: 0.3cqw;
   font-family: var(--font-display);
-  font-size: 2cqw; line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
+  font-size: clamp(2cqw, 3.2cqh, 2.3cqw); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
 }
 
-.gap__note { margin: 2cqw 0 auto; color: var(--ink-3); }
+.gap__note { margin: clamp(2cqw, 3.6cqh, 3cqw) 0 auto; color: var(--ink-3); }
 
 /* ---------- 10 · Competition: the headline names each rival's gap; kotoSay's row glows ---------- */
 .rivals { justify-content: flex-start; }
@@ -714,31 +722,32 @@
 .matrix-wrap { flex: 1; min-height: 0; }
 .matrix { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; }
 .matrix th:first-child { width: 22%; }
+/* taller than 16:9 (full screen): rows and type grow with the height (cqh); each clamp's minimum is the 16:9 size */
 .matrix thead th {
-  padding: 0 1.4cqw 1.1cqw;
+  padding: 0 1.4cqw clamp(1.1cqw, 2.2cqh, 1.6cqw);
   text-align: left; vertical-align: bottom;
-  font-size: 1.4cqw; line-height: 1.3; font-weight: 600; color: var(--ink-1);
+  font-size: clamp(1.4cqw, 2.25cqh, 1.6cqw); line-height: 1.3; font-weight: 600; color: var(--ink-1);
   border-bottom: 1px solid var(--hairline-strong);
 }
 .matrix .matrix__corner { color: var(--ink-3); font-weight: 500; }
 .matrix__n { width: 1.75cqw; height: 1.75cqw; margin-right: 0.7cqw; font-size: 0.95cqw; vertical-align: 0.05em; }
 .matrix tbody th {
-  padding: 1.3cqw 1.4cqw;
+  padding: clamp(1.3cqw, 3cqh, 2.2cqw) 1.4cqw;
   text-align: left;
-  font-size: 1.45cqw; line-height: 1.25; letter-spacing: -0.008em; font-weight: 600; color: var(--ink-1);
+  font-size: clamp(1.45cqw, 2.3cqh, 1.65cqw); line-height: 1.25; letter-spacing: -0.008em; font-weight: 600; color: var(--ink-1);
 }
 .matrix td {
   position: relative;
-  padding: 1.3cqw 1.4cqw 1.3cqw 4.1cqw;
+  padding: clamp(1.3cqw, 3cqh, 2.2cqw) 1.4cqw clamp(1.3cqw, 3cqh, 2.2cqw) 4.1cqw;
   vertical-align: middle;
-  font-size: 1.4cqw; line-height: 1.3; color: var(--ink-2);
+  font-size: clamp(1.4cqw, 2.25cqh, 1.6cqw); line-height: 1.3; color: var(--ink-2);
 }
 .matrix tbody tr + tr > * { border-top: 1px solid var(--hairline); }
 .matrix .matrix__us > * { border-top: 0; background: var(--sign-soft); color: var(--ink-1); }
 .matrix .matrix__us > th { border-radius: var(--r-md) 0 0 var(--r-md); }
 .matrix .matrix__us > td:last-child { border-radius: 0 var(--r-md) var(--r-md) 0; }
 .matrix .matrix__us .wordmark { font-size: 1.9cqw; }
-.matrix tbody tr:nth-last-child(2) > * { padding-bottom: 1.6cqw; }
+.matrix tbody tr:nth-last-child(2) > * { padding-bottom: clamp(1.6cqw, 3.4cqh, 2.5cqw); }
 
 /* Marks: shape carries meaning, not colour alone (filled ✓ · half · minus) */
 .mark { display: inline-block; position: relative; width: 1.65cqw; height: 1.65cqw; border-radius: 50%; }
@@ -765,7 +774,7 @@
 .mark--sm.mark--yes::after { border-width: 0 0.13cqw 0.13cqw 0; }
 .mark--sm.mark--no, .mark--sm.mark--part { border-width: 0.1cqw; }
 .mark--sm.mark--no::after { height: 0.1cqw; margin-top: -0.05cqw; }
-.matrix__note { flex: none; margin-top: 1.5cqw; }
+.matrix__note { flex: none; margin-top: clamp(1.5cqw, 3cqh, 2.4cqw); }
 
 
 /* ---------- 11 · Business model: price, margin, quota, proof ----------
@@ -781,10 +790,13 @@
   padding-bottom: 0.1em;
 }
 
-.model__cols { margin-top: auto; display: grid; grid-template-columns: 1.15fr 1fr 1fr; column-gap: 3cqw; align-items: stretch; }
-.model__col { padding-top: 1.5cqw; border-top: 1px solid var(--hairline-strong); }
+/* taller than 16:9 (full screen): --x is the slide's height beyond 16:9, and the gaps below share most of it,
+   so the block reaches down to the bottom of the slide. At 16:9 or wider --x is 0: the 16:9 layout. */
+.model { --x: max(0px, 100cqh - 56.25cqw); }
+.model__cols { margin-top: calc(3cqw + var(--x) * 0.12); display: grid; grid-template-columns: 1.15fr 1fr 1fr; column-gap: 3cqw; align-items: stretch; }
+.model__col { padding-top: clamp(1.5cqw, 3cqh, 2.3cqw); border-top: 1px solid var(--hairline-strong); }
 .model__col--price {
-  padding: 1.8cqw 2.2cqw; border-top: 0; border-radius: 2cqw;
+  padding: calc(2.3cqw + var(--x) * 0.08) 2.2cqw; border-top: 0; border-radius: 2cqw;
   background: var(--surface-1);
   box-shadow:
     0 0 0 1px rgba(196, 176, 255, 0.45),
@@ -792,11 +804,11 @@
     0 0 3.4cqw rgba(222, 182, 245, 0.5),
     0 1cqw 2cqw rgba(60, 45, 20, 0.08);
 }
-.model__kicker { display: block; font-size: 1.05cqw; line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
+.model__kicker { display: block; font-size: clamp(1.05cqw, 1.65cqh, 1.2cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
 .model__big {
-  margin-top: 0.8cqw;
+  margin-top: calc(1cqw + var(--x) * 0.03);
   font-family: var(--font-display);
-  font-size: 5.4cqw; line-height: 1; letter-spacing: -0.045em; font-weight: 800; color: var(--ink-1);
+  font-size: clamp(5.4cqw, 9.4cqh, 6.6cqw); line-height: 1; letter-spacing: -0.045em; font-weight: 800; color: var(--ink-1);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .model__big span { margin-left: 0.08em; font-size: 0.4em; letter-spacing: -0.01em; font-weight: 600; color: var(--ink-3); }
@@ -806,23 +818,23 @@
   padding-bottom: 0.06em;
 }
 .model__col--price .model__big span { -webkit-text-fill-color: var(--ink-3); }
-.model__line { margin-top: 0.8cqw; font-size: 1.45cqw; line-height: 1.35; color: var(--ink-2); text-wrap: pretty; }
+.model__line { margin-top: calc(1cqw + var(--x) * 0.03); font-size: clamp(1.45cqw, 2.3cqh, 1.65cqw); line-height: 1.35; color: var(--ink-2); text-wrap: pretty; }
 .model__line strong { font-weight: 700; color: var(--ink-1); }
-.model__small { margin-top: 0.7cqw; font-size: 1.2cqw; line-height: 1.35; color: var(--ink-3); }
+.model__small { margin-top: calc(0.9cqw + var(--x) * 0.03); font-size: clamp(1.2cqw, 1.9cqh, 1.35cqw); line-height: 1.35; color: var(--ink-3); }
 
 /* the ¥190 split: cost to serve vs margin */
-.model__bar { display: flex; gap: 2px; height: 2.6cqw; margin: 1.1cqw 0 0; }
+.model__bar { display: flex; gap: 2px; height: clamp(2.6cqw, 4.6cqh, 3.3cqw); margin: clamp(1.1cqw, 2.4cqh, 1.7cqw) 0 0; }
 .model__seg {
   flex: var(--w) 1 0; display: grid; place-items: center; border-radius: 0.3cqw;
-  font-size: 1.1cqw; font-weight: 600; white-space: nowrap;
+  font-size: clamp(1.1cqw, 1.75cqh, 1.25cqw); font-weight: 600; white-space: nowrap;
 }
 .model__seg--cost { background: var(--neutral-fill); color: var(--ink-2); }
 .model__seg--margin { background: var(--voice); color: #fffcf6; }
 
 .model__proof {
-  margin-top: 2.4cqw;
+  margin-top: calc(3.6cqw + var(--x) * 0.2);
   display: flex; align-items: center; gap: 2cqw;
-  padding: 1.2cqw 2cqw; border-radius: var(--r-lg);
+  padding: calc(1.6cqw + var(--x) * 0.05) 2cqw; border-radius: var(--r-lg);
   border: 1px solid transparent;
   background-image: linear-gradient(var(--surface-1), var(--surface-1)), var(--voice);
   background-origin: border-box; background-clip: padding-box, border-box;
@@ -830,11 +842,11 @@
 .model__proof-tag { flex: none; font-size: 1cqw; line-height: 1; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--reply-ink); }
 .model__proof p {
   font-family: var(--font-display);
-  font-size: 1.85cqw; line-height: 1.25; letter-spacing: -0.018em; font-weight: 600; color: var(--ink-2);
+  font-size: clamp(1.85cqw, 2.9cqh, 2.05cqw); line-height: 1.25; letter-spacing: -0.018em; font-weight: 600; color: var(--ink-2);
 }
 .model__proof strong { font-weight: 700; color: var(--ink-1); }
 .model__proof .voice-text { font-weight: 700; }
-.model__sources { margin: 1.4cqw 0 auto; color: var(--ink-3); }
+.model__sources { margin: calc(2cqw + var(--x) * 0.12) 0 auto; color: var(--ink-3); }
 
 /* ---------- 12 · Growth: one roadmap ----------
    A gradient line draws left to right; each milestone lands as the line reaches it;
@@ -859,6 +871,7 @@
 @keyframes map-pulse { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(2.4); } }
 .road > :not(.road__map-wrap) { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .slide.is-visible .road__map-pulse { animation: none; } }
+/* taller than 16:9 (full screen): sizes grow with the height (cqh); each clamp's minimum is the 16:9 size */
 .road__steps {
   position: relative; margin-top: auto;
   display: grid; grid-template-columns: 1fr 1fr 1.2fr; column-gap: 3cqw; align-items: start;
@@ -884,24 +897,27 @@
 .road__step:nth-of-type(2) .road__dot { border-color: #b155bb; }
 .road__step--goal .road__dot { border-color: var(--reply); background: var(--reply); box-shadow: 0 0 0 0.5cqw rgba(224, 92, 151, 0.18); }
 .road__when {
-  display: block; margin-top: 1.4cqw;
-  font-size: 1.15cqw; line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+  display: block; margin-top: clamp(1.4cqw, 3cqh, 2.2cqw);
+  font-size: clamp(1.15cqw, 1.8cqh, 1.3cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
 }
 .road__big {
-  margin-top: 0.9cqw;
+  margin-top: clamp(0.9cqw, 2cqh, 1.4cqw);
   font-family: var(--font-display);
-  font-size: 4.6cqw; line-height: 1; letter-spacing: -0.04em; font-weight: 800; color: var(--ink-1);
+  font-size: clamp(4.6cqw, 8cqh, 5.6cqw); line-height: 1; letter-spacing: -0.04em; font-weight: 800; color: var(--ink-1);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .road__big span { display: block; margin-top: 0.5cqw; font-size: 0.34em; letter-spacing: -0.01em; font-weight: 600; color: var(--ink-3); }
+/* a word instead of a number ("Pay-per-use"): set smaller so the three columns stay even; its label keeps the usual size */
+.road__big--word { font-size: calc(clamp(4.6cqw, 8cqh, 5.6cqw) * 0.78); }
+.road__big--word span { font-size: calc(0.34em / 0.78); }
 .road__what {
-  margin-top: 1cqw;
+  margin-top: clamp(1cqw, 2.2cqh, 1.5cqw);
   font-family: var(--font-display);
-  font-size: 1.75cqw; line-height: 1.2; letter-spacing: -0.018em; font-weight: 600; color: var(--ink-2);
+  font-size: clamp(1.75cqw, 2.8cqh, 2cqw); line-height: 1.2; letter-spacing: -0.018em; font-weight: 600; color: var(--ink-2);
   text-wrap: balance;
 }
 .road__goal {
-  margin-top: 1cqw; padding: 1.6cqw 2cqw 1.8cqw; border-radius: 2cqw;
+  margin-top: 1cqw; padding: clamp(1.6cqw, 3.6cqh, 2.6cqw) 2cqw clamp(1.8cqw, 3.8cqh, 2.8cqw); border-radius: 2cqw;
   background: var(--surface-1);
   box-shadow:
     0 0 0 1px rgba(196, 176, 255, 0.45),
@@ -911,7 +927,7 @@
     0 1cqw 2cqw rgba(60, 45, 20, 0.08);
 }
 .road__goal .road__big {
-  margin-top: 0; font-size: 6.4cqw;
+  margin-top: 0; font-size: clamp(6.4cqw, 11cqh, 7.6cqw);
   background: var(--voice); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
   padding-bottom: 0.04em;
@@ -920,8 +936,8 @@
 .road__goal .road__what { color: var(--ink-1); font-weight: 700; }
 
 .road__note {
-  margin: 2.6cqw 0 auto; padding-top: 1.4cqw; border-top: 1px solid var(--hairline-strong);
-  font-size: 1.45cqw; line-height: 1.35; color: var(--ink-2);
+  margin: clamp(2.6cqw, 5.6cqh, 4cqw) 0 auto; padding-top: clamp(1.4cqw, 2.8cqh, 2.1cqw); border-top: 1px solid var(--hairline-strong);
+  font-size: clamp(1.45cqw, 2.3cqh, 1.65cqw); line-height: 1.35; color: var(--ink-2);
 }
 .road__note strong { font-weight: 700; color: var(--ink-1); }
 
@@ -948,18 +964,20 @@
   padding-bottom: 0.1em;
 }
 .crew__list { margin: auto 0; display: grid; grid-template-columns: repeat(5, 1fr); column-gap: 1.8cqw; }
+/* taller than 16:9 (full screen): the portraits stretch taller and the type grows with the height (cqh);
+   each clamp's minimum is the 16:9 size (a 4:5 portrait) */
 .mate__photo {
-  margin: 0; aspect-ratio: 4 / 5; overflow: hidden;
+  margin: 0; height: clamp(20.8cqw, 38cqh, 27cqw); overflow: hidden;
   border-radius: var(--r-lg); box-shadow: var(--shadow-card), 0 1.2cqw 2.4cqw rgba(60, 45, 20, 0.10);
 }
 .mate__photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .mate__name {
-  margin-top: 1.4cqw;
+  margin-top: clamp(1.4cqw, 2.8cqh, 2.1cqw);
   font-family: var(--font-display);
-  font-size: 2.1cqw; line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
+  font-size: clamp(2.1cqw, 3.4cqh, 2.4cqw); line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
 }
-.mate__role { margin-top: 0.35cqw; font-size: 1.2cqw; line-height: 1.3; font-weight: 700; color: var(--sign-ink); white-space: nowrap; }
-.mate__does { margin-top: 0.5cqw; font-size: 1.3cqw; line-height: 1.35; color: var(--ink-2); }
+.mate__role { margin-top: 0.35cqw; font-size: clamp(1.2cqw, 1.85cqh, 1.3cqw); line-height: 1.3; font-weight: 700; color: var(--sign-ink); white-space: nowrap; }
+.mate__does { margin-top: 0.5cqw; font-size: clamp(1.3cqw, 2.1cqh, 1.5cqw); line-height: 1.35; color: var(--ink-2); }
 
 /* ---------- 14 · Close: the promise, in two languages, and the voice given back ---------- */
 .close { align-items: center; justify-content: center; text-align: center; padding-left: 6.25cqw; }   /* even sides: centred */
@@ -1017,23 +1035,25 @@
   color: transparent; -webkit-text-fill-color: transparent;
 }
 
+/* On a slide taller than 16:9 (full screen), sizes grow with the height (cqh) so the steps
+   fill the slide; each clamp's minimum is the 16:9 size. */
 .tested__steps { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 3cqw; }
 .tstep__media {
-  margin: 0; height: 14.5cqw; overflow: hidden;
+  margin: 0; height: clamp(14.5cqw, 34cqh, 24cqw); overflow: hidden;
   border-radius: var(--r-lg); box-shadow: var(--shadow-card), 0 1.4cqw 2.8cqw rgba(60, 45, 20, 0.10);
 }
 .tstep__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .tstep__kicker {
-  display: flex; align-items: baseline; gap: 0.7cqw; margin-top: 1.5cqw;
-  font-size: 1.1cqw; line-height: 1.3; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sign-ink);
+  display: flex; align-items: baseline; gap: 0.7cqw; margin-top: clamp(1.5cqw, 2.6cqh, 2cqw);
+  font-size: clamp(1.1cqw, 1.75cqh, 1.25cqw); line-height: 1.3; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--sign-ink);
 }
 .tstep__kicker b { font-weight: 700; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .tstep__title {
   margin-top: 0.5cqw;
   font-family: var(--font-display);
-  font-size: 2.2cqw; line-height: 1.1; letter-spacing: -0.025em; font-weight: 700; color: var(--ink-1);
+  font-size: clamp(2.2cqw, 3.4cqh, 2.3cqw); line-height: 1.1; letter-spacing: -0.025em; font-weight: 700; color: var(--ink-1);
 }
-.tstep__line { margin-top: 0.45cqw; font-size: 1.4cqw; line-height: 1.35; color: var(--ink-2); }
+.tstep__line { margin-top: 0.45cqw; font-size: clamp(1.4cqw, 2.3cqh, 1.6cqw); line-height: 1.35; color: var(--ink-2); }
 
 /* the result: 1.5 m, with a ruler drawn out to it */
 .tstep__range {
@@ -1047,7 +1067,7 @@
 }
 .tstep__big {
   font-family: var(--font-display);
-  font-size: 7cqw; line-height: 1; letter-spacing: -0.045em; font-weight: 800; font-variant-numeric: tabular-nums;
+  font-size: clamp(7cqw, 12cqh, 8.6cqw); line-height: 1; letter-spacing: -0.045em; font-weight: 800; font-variant-numeric: tabular-nums;
   background: var(--voice); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
   padding-bottom: 0.06em;
@@ -1060,12 +1080,12 @@
   transition: stroke-dashoffset 1.6s var(--ease-out) 0.9s;
 }
 .slide.is-visible .tstep__ruler .tstep__ruler-line { stroke-dashoffset: 0; }
-.tstep__range-label { font-size: 1.1cqw; line-height: 1.3; font-weight: 600; color: var(--ink-3); }
+.tstep__range-label { font-size: clamp(1.1cqw, 1.75cqh, 1.25cqw); line-height: 1.3; font-weight: 600; color: var(--ink-3); }
 
 .tested__next {
-  margin: 2.4cqw 0 auto;
+  margin: clamp(2.4cqw, 5cqh, 3.6cqw) 0 auto;
   display: flex; align-items: center; gap: 2cqw;
-  padding: 1.3cqw 2cqw; border-radius: var(--r-lg);
+  padding: clamp(1.3cqw, 2.6cqh, 2cqw) 2cqw; border-radius: var(--r-lg);
   background: var(--surface-1);
   border: 1px solid transparent;
   background-image: linear-gradient(var(--surface-1), var(--surface-1)), var(--voice);
@@ -1591,28 +1611,27 @@
 }
 @keyframes witness-rec { 50% { opacity: 0.15; } }
 
-/* the text side */
+/* the text side. On a slide taller than 16:9 (full screen) only the gaps grow with the height (cqh),
+   so the story fills the slide down to the bottom; the type stays the same size. */
 .witness__text { position: relative; z-index: 2; max-width: 44cqw; }
 .witness__eyebrow { color: var(--wound); }
 .witness__title {
   font-family: var(--font-display);
   font-size: 4.4cqw; line-height: 1; letter-spacing: -0.035em; font-weight: 700; color: var(--pale);
 }
-.witness__lede { margin-top: 0.9cqw; font-size: 1.6cqw; line-height: 1.4; color: rgba(241, 236, 226, 0.78); text-wrap: pretty; }
+.witness__lede { margin-top: clamp(0.9cqw, 2.2cqh, 1.6cqw); font-size: 1.6cqw; line-height: 1.4; color: rgba(241, 236, 226, 0.78); text-wrap: pretty; }
 .witness__lede b { color: var(--pale); font-weight: 700; }
-.witness__log { margin-top: 2.2cqw; }
+.witness__log { margin-top: clamp(2.2cqw, 6.5cqh, 4.6cqw); }
 .witness__log li {
-  display: grid; grid-template-columns: 2.8cqw 1fr; align-items: baseline;
-  padding: 0.75cqw 0; border-top: 1px solid rgba(241, 236, 226, 0.13);
+  padding: clamp(0.75cqw, 2.4cqh, 1.7cqw) 0; border-top: 1px solid rgba(241, 236, 226, 0.13);
   font-size: 1.5cqw; line-height: 1.35; color: rgba(241, 236, 226, 0.82);
 }
 .witness__log strong { color: var(--pale); font-weight: 700; }
-.witness__n { font-family: var(--font-mono); font-size: 0.9cqw; letter-spacing: 0.06em; color: var(--wound); }
 .witness__now { color: var(--pale); }
 .witness__now b { color: var(--wound); font-weight: 700; }
 
 .witness__punch {
-  margin-top: 2.4cqw;
+  margin-top: clamp(2.4cqw, 7cqh, 5cqw);
   font-family: var(--font-display);
   font-size: 2.6cqw; line-height: 1.2; letter-spacing: -0.025em; font-weight: 700; color: var(--pale);
 }
@@ -1651,7 +1670,7 @@
   80% { clip-path: inset(15% 0 55% 0); transform: translateX(0.06em); }
   100% { opacity: 0.55; clip-path: inset(0); transform: translateX(0.045em); }
 }
-.witness__source { margin-top: 1.8cqw; color: rgba(241, 236, 226, 0.5); }
+.witness__source { margin-top: clamp(1.8cqw, 4cqh, 2.8cqw); color: rgba(241, 236, 226, 0.5); }
 
 @media (prefers-reduced-motion: reduce) {
   .witness__photo, .slide.is-visible .witness__photo { transform: none; transition: none; }

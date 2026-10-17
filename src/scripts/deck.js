@@ -375,7 +375,7 @@
     e.preventDefault();
 
     if (e.ctrlKey || e.metaKey) {      // trackpad pinch arrives as Ctrl + wheel: zoom the slide, not the page
-      zoomAt(Math.exp(-clamp(dy, -60, 60) * 0.005), e.clientX, e.clientY, false);   // ~1.35× per mouse-wheel notch
+      zoomAt(Math.exp(-clamp(dy, -60, 60) * 0.0017), e.clientX, e.clientY, false);   // ~1.1× per mouse-wheel notch
       return;
     }
     if (zoomed()) {                    // zoomed in: scrolling pans

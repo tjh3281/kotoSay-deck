@@ -82,6 +82,9 @@ body.is-dark-slide { background: #07090d; }
   transition-delay: calc(var(--i, 0) * 70ms + 60ms);
 }
 .slide.is-visible [data-reveal] { opacity: 1; transform: none; }
+/* Once a slide is fully off screen, snap everything back at once (no staggered fade-out),
+   so coming back to it replays the entrance from the start. */
+.slide:not(.is-visible) *, .slide:not(.is-visible) *::before, .slide:not(.is-visible) *::after { transition: none !important; }
 
 /* ---------- Floating controls: a dark translucent material ---------- */
 .chrome {
