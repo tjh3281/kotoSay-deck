@@ -450,10 +450,10 @@
 .how__arrow.how__lane--back path { stroke: var(--reply); transition-delay: 0.85s; }
 .slide.is-visible .how__arrow path { stroke-dashoffset: 0; }
 
-/* the WFD & WASLI concerns, answered in one quiet line */
+/* the WFD & WASLI concerns, answered in one quiet line under the title, ruled off from the map below */
 .how__fixes {
   display: flex; align-items: center; gap: 3cqw;
-  padding-top: 1.5cqw; border-top: 1px solid var(--hairline-strong);
+  padding-bottom: 1.5cqw; border-bottom: 1px solid var(--hairline-strong);
 }
 .how__fixes-intro { flex: none; font-size: 1.15cqw; line-height: 1.3; font-weight: 700; color: var(--ink-1); }
 .how__fixes-intro span { display: block; font-weight: 500; color: var(--ink-3); }
