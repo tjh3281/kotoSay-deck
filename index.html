@@ -558,12 +558,14 @@ body.is-dark-slide { background: #07090d; }
   font-size: 2cqw; line-height: 1.2; letter-spacing: -0.02em; font-weight: 700;
   color: var(--ink-1); text-wrap: balance;
 }
-.hero__chips { margin-top: 1.5cqw; flex-wrap: nowrap; gap: 0.5cqw; }
-.hero__chips .chip { white-space: nowrap; font-size: 1cqw; padding: 0.5cqw 0.9cqw; }
+.hero__chips { margin-top: 1.4cqw; display: flex; flex-wrap: wrap; gap: 0.6cqw 0.7cqw; max-width: 44cqw; }
+.hero__chips .chip { white-space: nowrap; font-size: 0.95cqw; padding: 0.45cqw 0.8cqw; }
 .hero__chips .chip--icon { display: inline-flex; align-items: center; gap: 0.5cqw; padding-left: 0.65cqw; }
 .chip__flag { flex: none; width: 1.65cqw; height: 1.1cqw; border-radius: 0.15cqw; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.16); }
 .chip__flag--wide { width: 2.2cqw; }
 .chip__android { flex: none; width: 1.6cqw; height: 1.07cqw; }
+.chip__translate { flex: none; width: 1.35cqw; height: 1.35cqw; border-radius: 0.2cqw; }
+.nowrap { white-space: nowrap; }
 
 .hero__visual { position: relative; flex: none; display: flex; align-items: center; gap: 1cqw; }
 .hero__visual .phone { flex: none; width: var(--phone-w); }
@@ -697,7 +699,7 @@ body.is-dark-slide { background: #07090d; }
 .demo__phone .phone__screen { height: 100%; width: auto; aspect-ratio: var(--ar, 640 / 1386); }
 
 .demo__side {
-  position: absolute; top: calc(var(--phone-h) / 2); width: 22cqw;
+  position: absolute; top: calc(var(--phone-h) / 2); width: 26.5cqw;
   display: flex; flex-direction: column; gap: 1.2cqw;
   transform: translateY(-34%);
 }
@@ -858,8 +860,8 @@ body.is-dark-slide { background: #07090d; }
 .how__fix-list { flex: 1; display: flex; justify-content: space-between; gap: 2cqw; }
 .how__fix-list li { display: flex; align-items: baseline; gap: 0.7cqw; white-space: nowrap; }
 .how__fix-list s {
-  font-size: 1.15cqw; color: var(--ink-3);
-  text-decoration-color: var(--reply); text-decoration-thickness: 0.1cqw;
+  font-size: 1.15cqw; color: var(--stamp);
+  text-decoration-color: var(--stamp); text-decoration-thickness: 0.1cqw;
 }
 .how__fix-list span { font-size: 1.45cqw; font-weight: 700; letter-spacing: -0.01em; color: var(--ink-1); }
 .how__fix-list span::before { content: "→"; margin-right: 0.6cqw; font-weight: 500; color: var(--ink-3); }
@@ -1060,7 +1062,7 @@ body.is-dark-slide { background: #07090d; }
 /* Japan: the glowing target */
 .gap__japan {
   display: flex; flex-direction: column; justify-content: center;
-  padding: clamp(2.4cqw, 4.8cqh, 3.6cqw) 2.8cqw; border-radius: 2cqw;
+  padding: clamp(2.8cqw, 5.2cqh, 4cqw) 3.4cqw; border-radius: 2.2cqw;
   background: var(--surface-1);
   box-shadow:
     0 0 0 1px rgba(196, 176, 255, 0.45),
@@ -1069,24 +1071,24 @@ body.is-dark-slide { background: #07090d; }
     0 0 6cqw rgba(247, 182, 212, 0.35),
     0 1cqw 2cqw rgba(60, 45, 20, 0.08);
 }
-.gap__japan-top { display: flex; align-items: center; gap: 0.9cqw; }
-.gap__flag { flex: none; width: 2.4cqw; height: 1.6cqw; border-radius: 0.2cqw; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.16); }
-.gap__japan-tag { font-size: clamp(1.05cqw, 1.65cqh, 1.2cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
-.gap__act { margin-top: clamp(1cqw, 2cqh, 1.5cqw); font-size: clamp(1.6cqw, 2.5cqh, 1.8cqw); line-height: 1.35; color: var(--ink-2); text-wrap: balance; }
+.gap__japan-top { display: flex; align-items: center; gap: 1cqw; }
+.gap__flag { flex: none; width: 3.2cqw; height: 2.1cqw; border-radius: 0.25cqw; box-shadow: 0 0 0 1px rgba(23, 21, 15, 0.16); }
+.gap__japan-tag { font-size: clamp(1.25cqw, 2cqh, 1.45cqw); line-height: 1; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sign-ink); }
+.gap__act { margin-top: clamp(1.2cqw, 2.2cqh, 1.8cqw); font-size: clamp(1.9cqw, 3.2cqh, 2.3cqw); line-height: 1.32; color: var(--ink-2); text-wrap: balance; }
 .gap__act strong { font-weight: 700; color: var(--ink-1); }
 .gap__yen {
-  margin-top: clamp(1.2cqw, 2.6cqh, 2cqw);
+  margin-top: clamp(1.4cqw, 2.6cqh, 2.2cqw);
   font-family: var(--font-display);
-  font-size: clamp(9cqw, 15cqh, 11cqw); line-height: 0.95; letter-spacing: -0.05em; font-weight: 800; font-variant-numeric: tabular-nums;
+  font-size: clamp(11.5cqw, 19cqh, 14cqw); line-height: 0.95; letter-spacing: -0.05em; font-weight: 800; font-variant-numeric: tabular-nums;
   background: var(--voice); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
   padding-bottom: 0.06em;
 }
 .gap__yen span { margin-left: 0.04em; font-size: 0.5em; letter-spacing: -0.02em; }
 .gap__only {
-  margin-top: 0.3cqw;
+  margin-top: 0.5cqw;
   font-family: var(--font-display);
-  font-size: clamp(2cqw, 3.2cqh, 2.3cqw); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
+  font-size: clamp(2.4cqw, 3.8cqh, 2.8cqw); line-height: 1.15; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
 }
 
 .gap__note { margin: clamp(2cqw, 3.6cqh, 3cqw) 0 auto; color: var(--ink-3); }
@@ -1105,6 +1107,7 @@ body.is-dark-slide { background: #07090d; }
 .rivals .matrix-wrap { flex: none; margin-top: auto; padding-top: 2.4cqw; }
 .rivals .matrix__note { margin-bottom: auto; }
 .rivals .matrix td.is-gap strong { color: var(--stamp); }
+.rivals .matrix td.is-gap .matrix__sub { display: block; margin-top: 0.25cqw; font-size: 0.88em; font-weight: 600; line-height: 1.25; color: var(--stamp); }
 .rivals .matrix .matrix__us > * {
   background: var(--surface-1);
   box-shadow: 0 -1px 0 rgba(196, 176, 255, 0.55) inset, 0 1px 0 rgba(196, 176, 255, 0.55) inset;
@@ -2132,8 +2135,8 @@ body.is-dark-slide { background: #07090d; }
 .dignity__struck { display: flex; gap: 2.8cqw; }
 .dignity__struck li {
   position: relative;
-  font-size: 1.9cqw; line-height: 1.2; font-weight: 600; letter-spacing: -0.012em; color: var(--ink-1);
-  transition: color 0.5s ease-out; transition-delay: calc(var(--d) + 0.35s);
+  font-size: 1.9cqw; line-height: 1.2; font-weight: 600; letter-spacing: -0.012em; color: var(--stamp);
+  transition: opacity 0.5s ease-out; transition-delay: calc(var(--d) + 0.35s);
 }
 .dignity__struck li::after {
   content: ""; position: absolute; left: -0.25em; right: -0.25em; top: 54%;
@@ -2141,7 +2144,7 @@ body.is-dark-slide { background: #07090d; }
   transform: scaleX(0) rotate(-1.5deg); transform-origin: 0 50%;
   transition: transform 0.45s cubic-bezier(0.6, 0, 0.3, 1); transition-delay: var(--d);
 }
-.slide.is-visible .dignity__struck li { color: var(--ink-3); }
+.slide.is-visible .dignity__struck li { color: var(--stamp); opacity: 0.88; }
 .slide.is-visible .dignity__struck li::after { transform: scaleX(1) rotate(-1.5deg); }
 
 /* the three places the Deaf are let in */
@@ -2169,13 +2172,13 @@ body.is-dark-slide { background: #07090d; }
   .dignity__dawn { transform: none; transition: opacity 0.2s ease; }
   .dignity__title[data-reveal] { transform: none; filter: none; }
   .dignity__struck li, .dignity__struck li::after { transition: none; }
-  .dignity__struck li { color: var(--ink-3); }
+  .dignity__struck li { color: var(--stamp); opacity: 0.88; }
   .dignity__struck li::after { transform: scaleX(1) rotate(-1.5deg); }
 }
 @media print {
   .dignity__dawn { opacity: 1 !important; transform: none !important; }
   .dignity__title[data-reveal] { filter: none !important; }
-  .dignity__struck li { color: var(--ink-3) !important; }
+  .dignity__struck li { color: var(--stamp) !important; opacity: 0.88 !important; }
   .dignity__struck li::after { transform: scaleX(1) rotate(-1.5deg) !important; }
 }
 
@@ -2429,8 +2432,12 @@ body.is-dark-slide { background: #07090d; }
           </svg>
           <span><strong>Android</strong> Production App</span>
         </li>
-        <li class="chip">
-          <span><strong>5</strong> Spoken Languages Output</span>
+        <li class="chip chip--icon">
+          <svg class="chip__translate" viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" rx="4.5" fill="#1a73e8" />
+            <path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z" fill="#ffffff" transform="translate(1.2, 1.2) scale(0.9)" />
+          </svg>
+          <span>5 Spoken Languages</span>
         </li>
       </ul>
     </div>
@@ -2447,7 +2454,7 @@ body.is-dark-slide { background: #07090d; }
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
         </button>
       </div>
-      <p class="phone__label">Sign → voice<span>emotion vision AI → expressive voice</span></p>
+      <p class="phone__label">Sign → voice<span>emotion vision AI → <span class="nowrap">expressive voice</span></span></p>
     </div>
 
     <!-- the two-way loop: violet goes out as voice, pink comes back as sign -->
@@ -2498,7 +2505,7 @@ body.is-dark-slide { background: #07090d; }
         <path d="M106.4 46.4 A90 90 0 0 0 106.4 173.6" />
         <path d="M85.1 25.1 A120 120 0 0 0 85.1 194.9" />
       </svg>
-      <p class="demo__label">Sign → voice<span>facial emotion vision AI → expressive voice</span></p>
+      <p class="demo__label">Sign → voice<span>facial emotion vision AI → <span class="nowrap">expressive voice</span></span></p>
     </div>
 
     <div class="phone demo__phone">
@@ -2527,14 +2534,14 @@ body.is-dark-slide { background: #07090d; }
 <section class="slide how" data-label="How it works">
   <header class="how__head">
     <span class="eyebrow" data-reveal>Proposed solution · How it works</span>
-    <h2 class="how__title" data-reveal style="--i:1">Two-way loop.<br /><span class="how__title-back">Emotion AI meets sign grammar.</span></h2>
+    <h2 class="how__title" data-reveal style="--i:1">Two-way loop.<br /><span class="how__title-back">Emotion AI meets natural language.</span></h2>
   </header>
 
   <div class="how__fixes" data-reveal style="--i:2">
     <p class="how__fixes-intro">The flaws WFD &amp; WASLI exposed<span>2018 · solved, 8 years later</span></p>
     <ul class="how__fix-list">
       <li><s>Lifeless</s><span>A living voice</span></li>
-      <li><s>No cultural context</s><span>True sign grammar</span></li>
+      <li><s>No cultural context</s><span>NLP context model</span></li>
       <li><s>Zero emotion</s><span>Emotion model</span></li>
     </ul>
   </div>
@@ -2563,7 +2570,7 @@ body.is-dark-slide { background: #07090d; }
     <!-- back: a typed reply becomes sign -->
     <p class="how__end how__end--left how__lane--back" data-reveal style="--i:9">Avatar そうか signs back</p>
     <svg class="how__arrow how__lane--back" viewBox="0 0 70 12" aria-hidden="true"><path pathLength="1" d="M67 6H4M10 1.5 4 6 10 10.5" /></svg>
-    <p class="how__step how__lane--back" data-reveal style="--i:8">Syntax engine aligns with <em>sign grammar</em></p>
+    <p class="how__step how__lane--back" data-reveal style="--i:8">NLP engine preserves <em>cultural context</em></p>
     <svg class="how__arrow how__lane--back" viewBox="0 0 70 12" aria-hidden="true"><path pathLength="1" d="M67 6H4M10 1.5 4 6 10 10.5" /></svg>
     <p class="how__end how__end--right how__lane--back" data-reveal style="--i:7">Speaks or types reply</p>
   </div>
@@ -2642,11 +2649,11 @@ body.is-dark-slide { background: #07090d; }
   </header>
 
   <div class="dignity__ended" data-reveal style="--i:6">
-    <span class="dignity__ended-tag">Ended for good</span>
+    <span class="dignity__ended-tag">Barriers dismantled</span>
     <ul class="dignity__struck">
-      <li style="--d:1.15s">Derogatory slurs</li>
-      <li style="--d:1.45s">Systemic isolation</li>
-      <li style="--d:1.75s">Intellectual exclusion</li>
+      <li style="--d:1.15s">Institutional Isolation</li>
+      <li style="--d:1.45s">Financial Dependency</li>
+      <li style="--d:1.75s">Educational Exclusion</li>
     </ul>
   </div>
 
@@ -2785,7 +2792,7 @@ body.is-dark-slide { background: #07090d; }
           <th scope="row">NTT East interpreter</th>
           <td><span class="mark mark--yes" role="img" aria-label="Yes"></span>Human JSL interpreter</td>
           <td><span class="mark mark--yes" role="img" aria-label="Yes"></span>Signs back</td>
-          <td class="is-gap"><span class="mark mark--no" role="img" aria-label="No"></span><strong>High cost · Closed after 8 PM</strong></td>
+          <td class="is-gap"><span class="mark mark--no" role="img" aria-label="No"></span><strong>High cost</strong><span class="matrix__sub">Closed after 8 PM</span></td>
         </tr>
         <tr>
           <th scope="row">SoftBank SureTalk</th>
@@ -2797,7 +2804,7 @@ body.is-dark-slide { background: #07090d; }
           <th scope="row">Google SL2T</th>
           <td class="is-gap"><span class="mark mark--no" role="img" aria-label="No"></span>American SL only</td>
           <td class="is-gap"><span class="mark mark--no" role="img" aria-label="No"></span><strong>No sign back</strong></td>
-          <td><span class="mark mark--yes" role="img" aria-label="Yes"></span>On Pixel phones</td>
+          <td class="is-gap"><span class="mark mark--no" role="img" aria-label="No"></span><strong>Restricted to Pixel Phone-only</strong></td>
         </tr>
         <tr class="matrix__us">
           <th scope="row"><img class="matrix__app" data-asset-src="assets/brand/logo.webp" alt="" aria-hidden="true" /><span class="wordmark">koto<span>Say</span></span></th>
