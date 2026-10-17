@@ -291,8 +291,6 @@
     0 3cqw 6cqw rgba(23, 21, 15, 0.22);
 }
 .demo__phone .phone__screen { height: 100%; width: auto; aspect-ratio: var(--ar, 640 / 1386); }
-.demo__phone .phone__play { width: 6cqw; height: 6cqw; margin: -3cqw 0 0 -3cqw; }
-.demo__phone .phone__play svg { width: 2.4cqw; height: 2.4cqw; }
 
 .demo__side {
   position: absolute; top: calc(var(--phone-h) / 2); width: 22cqw;
