@@ -10,15 +10,23 @@ body {
 }
 body.is-idle { cursor: none; }
 
-/* The stage is the size container: every cqw inside resolves against it. */
+/* The stage is the size container: every cqw inside resolves against its content box (--w).
+   --w never takes more than 85% of the window, so there is always open space at the right
+   (--bleed), full screen included; the stage takes it as right padding, and .slide--bleed
+   backgrounds run into it. The slide may stand a little taller than 16:9 (up to 16:11),
+   so a 16:9 full screen is filled top to bottom instead of showing bars. */
 .stage {
+  --w: min(85vw, calc(100dvh * 16 / 9));
+  --bleed: calc(100vw - var(--w));
   position: relative;
-  width: min(100vw, calc(100dvh * 16 / 9));
-  aspect-ratio: 16 / 9;
+  width: calc(var(--w) + var(--bleed));
+  height: min(100dvh, calc(var(--w) * 11 / 16));
+  padding-right: var(--bleed);
   overflow: hidden;
   background: var(--bg);
-  container-type: inline-size;
-  touch-action: pan-y;          /* horizontal gestures come to us */
+  background-clip: content-box;   /* the bleed shows the page colour unless a slide paints it */
+  container-type: size;           /* cqw: the content width; cqh: the slide height */
+  touch-action: pan-y pinch-zoom;   /* horizontal gestures come to us; pinch still zooms on touch screens */
   user-select: none;
   -webkit-user-select: none;
 }
@@ -30,13 +38,32 @@ body.is-idle { cursor: none; }
 }
 
 .slide {
+  --pad-top: 3cqw;              /* the title sits close to the top-left corner */
+  --pad-x: 3.5cqw;
   position: relative;
   flex: 0 0 100%;
   height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 4.75cqw 6.25cqw 6.25cqw;
+  padding: var(--pad-top) 6.25cqw 6.25cqw var(--pad-x);
+  margin-right: var(--bleed);   /* slides sit one window-width apart, so the bleed shows no neighbour */
+}
+/* Background runs on into the space at the right; the content stays inside the 16:9 slide */
+.slide--bleed {
+  overflow: visible;
+  clip-path: inset(0 calc(-1 * var(--bleed)) 0 0);
+}
+
+/* ---------- Stage alignment ----------
+   On a window wider than 16:9 the stage sits flush left, so there is no empty
+   band before the content. Slides marked .slide--centered glide back to the middle. */
+.stage {
+  justify-self: start;
+  transition: transform 0.45s var(--ease-out);
+}
+body.is-centered-slide .stage {
+  transform: translateX(calc(var(--bleed) / 2));
 }
 
 /* ---------- Letterbox colour ----------
@@ -113,6 +140,11 @@ body.is-dark-slide { background: #07090d; }
 
 .stage.is-dragging { cursor: grabbing; }
 
+/* ---------- Zoom (deck.js): the slide itself scales, so text stays sharp ---------- */
+.slide.is-zoom-anim { transition: transform 0.32s var(--ease-out); }
+.stage.is-zoomed { cursor: grab; touch-action: none; }   /* zoomed in: every drag pans */
+.stage.is-zoomed.is-dragging { cursor: grabbing; }
+
 .chrome__where {
   display: flex;
   align-items: baseline;
@@ -160,6 +192,7 @@ body.is-dark-slide { background: #07090d; }
 /* ---------- Accessibility preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   [data-reveal] { transform: none; transition: opacity 0.2s ease; transition-delay: 0s; }
+  .stage { transition: none; }
   .chrome, .chrome.is-hidden { transition: opacity 0.2s ease; transform: translateX(-50%); filter: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
@@ -175,10 +208,10 @@ body.is-dark-slide { background: #07090d; }
 @page { size: 1600px 900px; margin: 0; }
 @media print {
   html, body { height: auto; overflow: visible; display: block; background: var(--bg); }
-  .stage { width: 1600px; aspect-ratio: auto; overflow: visible; }
+  .stage { --bleed: 0px; width: 1600px; height: auto; padding: 0; overflow: visible; transform: none !important; }
   .track { display: block; transform: none !important; }
   .slide {
-    width: 1600px; height: 900px; opacity: 1 !important;
+    width: 1600px; height: 900px; opacity: 1 !important; transform: none !important;
     break-after: page; page-break-after: always;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }

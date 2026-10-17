@@ -112,7 +112,7 @@
   --phone-w: 18.5cqw;
   --phone-h: calc(1.1cqw + (var(--phone-w) - 1.1cqw) * 1296 / 576);   /* bezel + the demo's exact shape */
   flex-direction: row; align-items: center; justify-content: space-between; gap: 3.5cqw;
-  padding-top: 3cqw; padding-bottom: 7.5cqw;          /* room for the two-line phone captions */
+  padding-bottom: 7.5cqw;          /* room for the two-line phone captions */
 }
 .hero__glow {
   position: absolute; right: -4cqw; top: 50%;
@@ -123,6 +123,8 @@
 }
 .hero__text {
   position: relative; flex: 1 1 0; min-width: 0; height: var(--phone-h);
+  align-self: flex-start;          /* title in the top-left corner; the phones stay centred */
+  margin-top: 0.45cqw;             /* its eyebrow has no leading: line its ink up with every other slide */
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .hero__eyebrow { margin: 0 0 2.1cqw; line-height: 1; }
@@ -230,6 +232,7 @@
   --phone-h: 41cqw;
   align-items: center; justify-content: center;
   padding-top: 3.4cqw; padding-bottom: 3.4cqw;
+  padding-left: 6.25cqw;           /* even sides keep the phone dead centre; the title is placed on its own */
 }
 .demo__glow {
   position: absolute; left: 50%; top: 50%;
@@ -249,7 +252,7 @@
 }
 
 /* title in the corner, like every slide */
-.demo__text { position: absolute; left: 6.25cqw; top: 4.75cqw; z-index: 2; }
+.demo__text { position: absolute; left: var(--pad-x); top: var(--pad-top); z-index: 2; }
 .demo__eyebrow { display: flex; align-items: center; gap: 0.7cqw; }
 .demo__rec {                                /* a recording light */
   flex: none; width: 0.75cqw; height: 0.75cqw; border-radius: 50%;
@@ -959,7 +962,7 @@
 .mate__does { margin-top: 0.5cqw; font-size: 1.3cqw; line-height: 1.35; color: var(--ink-2); }
 
 /* ---------- 14 · Close: the promise, in two languages, and the voice given back ---------- */
-.close { align-items: center; justify-content: center; text-align: center; }
+.close { align-items: center; justify-content: center; text-align: center; padding-left: 6.25cqw; }   /* even sides: centred */
 .close__glow {
   right: auto; left: 50%; top: 46%;
   width: 72cqw; height: 46cqw;
@@ -998,7 +1001,7 @@
 .close__chips .chip { white-space: nowrap; }
 .close__chips .chip--icon { display: inline-flex; align-items: center; gap: 0.5cqw; padding-left: 0.75cqw; }
 .close__foot { position: absolute; bottom: 2.6cqw; }
-.close__foot--left { left: 6.25cqw; }
+.close__foot--left { left: var(--pad-x); }
 .close__foot--right { right: 6.25cqw; }
 
 
@@ -1209,8 +1212,15 @@
   position: absolute; inset: 0; z-index: 0;
   width: 100%; height: 100%; object-fit: cover; pointer-events: none;
 }
+/* the bleed at the right: the forest mirrored, so it carries on without a seam */
+.opener__forest--bleed {
+  left: calc(100% - 2.5cqw); right: auto; transform: scaleX(-1);
+  /* it overlaps the forest a little and fades in there, so no seam shows (flipped: the fade is on its local right) */
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5cqw), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 2.5cqw), transparent);
+}
 .opener__defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.opener__eyebrow { position: absolute; left: 6.25cqw; top: 4.75cqw; margin: 0; }
+.opener__eyebrow { position: absolute; left: var(--pad-x); top: var(--pad-top); margin: 0; }
 .opener__body { position: relative; max-width: 50cqw; margin-top: 1.2cqw; }
 .opener__lead {
   font-family: var(--font-display);
@@ -1373,9 +1383,11 @@
 }
 
 /* 02 · dread: the bank and the police box under a storm, the record slammed onto each */
+/* The police photo runs on across the whole bleed. Its left edge is pinned in cqw, so the
+   part inside the slide never shifts; it only grows if the bleed outruns the photo. */
 .dread__scene {
-  position: absolute; inset: 0; z-index: 0;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0.35cqw;
+  position: absolute; inset: 0 calc(-1 * var(--bleed, 0px)) 0 0; z-index: 0;
+  display: grid; grid-template-columns: 49.825cqw 1fr; gap: 0.35cqw;
   background: var(--night);
 }
 .dread__panel { position: relative; overflow: hidden; }
@@ -1386,14 +1398,19 @@
   transition: transform 12s cubic-bezier(0.2, 0.6, 0.2, 1);   /* the walls slowly close in */
 }
 .dread__panel--bank img { object-position: 38% 30%; }
-.dread__panel--police img { object-position: 42% 50%; }
+/* natural width: the photo (1485 × 1059) at full slide height; wider only when the bleed needs it */
+.dread__panel--police img {
+  position: absolute; top: 0; left: -12.2cqw;
+  width: max(calc(100cqh * 1485 / 1059), calc(100% + 12.2cqw));
+  object-position: 0 50%; transform-origin: 37.1cqw 50%;
+}
 .slide.is-visible .dread__panel img { transform: scale(1.08); }
 /* weather over both photos: a heavy top for the title, a dark floor for the text, film grain */
 .dread__scene::before {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
     linear-gradient(180deg, rgba(7, 9, 13, 0.86) 0%, rgba(7, 9, 13, 0.3) 24%, rgba(7, 9, 13, 0.04) 46%, rgba(7, 9, 13, 0.62) 70%, rgba(7, 9, 13, 0.92) 100%),
-    radial-gradient(130% 90% at 50% 45%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+    radial-gradient(130cqw 50.6cqw at 50cqw 45%, transparent 40%, rgba(0, 0, 0, 0.55) 100%);   /* centred on the slide, not the bleed */
 }
 .dread__scene::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
@@ -1487,20 +1504,27 @@
 }
 
 /* 03 · witness: Mr. Ong seen like a surveillance feed; his voice drops out at the end as "signal lost". */
-.witness { justify-content: center; }
+.witness { justify-content: flex-start; }   /* title in the top-left corner, like every slide */
+/* The feed runs on across the whole bleed */
 .witness__feed {
-  position: absolute; top: 0; right: 0; bottom: 0; z-index: 0;
-  width: 60cqw; margin: 0; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+  --feed-bleed: var(--bleed, 0px);
+  position: absolute; top: 0; right: calc(-1 * var(--feed-bleed)); bottom: 0; z-index: 0;
+  width: calc(60cqw + var(--feed-bleed)); margin: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20.4cqw);
+  mask-image: linear-gradient(90deg, transparent 0, #000 20.4cqw);
 }
 .witness__feed[data-reveal] { transform: none; transition: opacity 1.2s ease-out; }
+/* pinned: the bleed only adds photo. Natural width: the photo (1100 × 733) at full slide height */
 .witness__photo, .witness__tear {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: 34% 50%;
+  position: absolute; inset: 0 auto 0 -8.3cqw; height: 100%;
+  width: max(calc(100cqh * 1100 / 733), calc(100% + 8.3cqw));
+  object-fit: cover; object-position: 0 50%; transform-origin: 38.3cqw 50%;
 }
 .witness__photo {
   filter: grayscale(0.6) brightness(0.72) contrast(1.15);
+  /* the photo's own watermark sits in its bottom-right corner: fade it out wherever the bleed shows it */
+  -webkit-mask-image: radial-gradient(24% 10% at 88% 91%, transparent 50%, #000 100%);
+  mask-image: radial-gradient(24% 10% at 88% 91%, transparent 50%, #000 100%);
   transform: scale(1.01);
   transition: transform 12s cubic-bezier(0.2, 0.6, 0.2, 1);
 }
@@ -1515,7 +1539,7 @@
 .witness__feed::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background:
-    radial-gradient(110% 85% at 55% 45%, transparent 45%, rgba(0, 0, 0, 0.6) 100%),
+    radial-gradient(66cqw 47.8cqw at 33cqw 45%, transparent 45%, rgba(0, 0, 0, 0.6) 100%),
     linear-gradient(180deg, transparent 60%, rgba(7, 9, 13, 0.85) 100%);
 }
 /* the picture tears once, sideways, as the slide arrives */
@@ -1531,7 +1555,7 @@
   100% { opacity: 0; }
 }
 .witness__credit {
-  position: absolute; right: 2.4cqw; bottom: 2.2cqw; z-index: 3;
+  position: absolute; right: calc(2.4cqw + var(--feed-bleed)); bottom: 2.2cqw; z-index: 3;   /* stays inside the slide */
   font-family: var(--font-mono); font-size: 0.8cqw; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(241, 236, 226, 0.55);
 }

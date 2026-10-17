@@ -66,7 +66,14 @@
 
   let index = indexFromHash() ?? 0;
   const spring = new Spring(index);
-  let width = stage.clientWidth || 1;
+  let width = 1;               // one slide step in px: the slide plus any bleed to its right
+  function measure() {
+    width = n > 1
+      ? slides[1].getBoundingClientRect().left - slides[0].getBoundingClientRect().left
+      : stage.clientWidth;
+    width = width || 1;
+  }
+  measure();
   let raf = 0;
   let lastTime = 0;
   let shownIndex = -1;
@@ -108,7 +115,8 @@
     syncMedia();
     // the page around the 16:9 stage takes the slide's colour, so dark slides get no cream bars
     document.body.classList.toggle("is-dark-slide", slides[index].classList.contains("slide--dark"));
-    if (announce) announcer.textContent = `Slide ${index + 1} of ${n}: ${labels[index]}`;
+    // on a window wider than 16:9 the stage hugs the left edge; symmetric slides stay centred
+    document.body.classList.toggle("is-centered-slide", slides[index].classList.contains("slide--centered"));    if (announce) announcer.textContent = `Slide ${index + 1} of ${n}: ${labels[index]}`;
     announce = true;
     const hash = `#${index + 1}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
@@ -142,6 +150,7 @@
   function goTo(i, opts = {}) {
     const target = clamp(i, 0, n - 1);
     const changed = target !== index;
+    if (changed) resetZoom(false); // a new slide always arrives whole
     index = target;
     updateUI();
 
@@ -185,6 +194,64 @@
     while (samples.length > 2 && t - samples[0].t > VELOCITY_WINDOW) samples.shift();
   }
 
+  /* ---------- Zoom ----------
+     Browser zoom can't enlarge a slide: the stage is sized to the window, so it
+     just re-fits. The deck zooms the current slide itself instead:
+       pinch, or Ctrl/⌘ + wheel      zoom at the pointer
+       Ctrl/⌘ + plus / minus / 0     zoom in / out / reset at the centre (+ − 0 alone work too)
+       double-click                  2× at the pointer, again to reset
+       drag or scroll while zoomed   pan
+       Esc, or changing slide        reset */
+  const ZOOM_MAX = 4;
+  const zoom = { s: 1, x: 0, y: 0, el: null };
+  const zoomed = () => zoom.s > 1.001;
+
+  function setZoom(s, x, y, animate) {
+    const el = slides[index];
+    if (zoom.el && zoom.el !== el) resetZoom(false);
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    zoom.s = clamp(s, 1, ZOOM_MAX);
+    zoom.x = clamp(x, w * (1 - zoom.s), 0);   // the slide always covers its own box
+    zoom.y = clamp(y, h * (1 - zoom.s), 0);
+    zoom.el = el;
+    el.classList.toggle("is-zoom-anim", Boolean(animate) && !reduced);
+    el.style.transformOrigin = "0 0";
+    el.style.transform = zoomed()
+      ? `translate3d(${zoom.x.toFixed(2)}px, ${zoom.y.toFixed(2)}px, 0) scale(${zoom.s.toFixed(4)})`
+      : "";
+    stage.classList.toggle("is-zoomed", zoomed());
+  }
+
+  function resetZoom(animate) {
+    if (!zoom.el) return;
+    const el = zoom.el;
+    el.classList.toggle("is-zoom-anim", Boolean(animate) && !reduced);
+    el.style.transform = "";
+    zoom.s = 1; zoom.x = 0; zoom.y = 0; zoom.el = null;
+    stage.classList.remove("is-zoomed");
+  }
+
+  /* Zoom by a factor, keeping the point under (cx, cy) still; no point = the slide's centre */
+  function zoomAt(factor, cx, cy, animate) {
+    const el = slides[index];
+    const r = el.getBoundingClientRect();    // already includes the current zoom
+    const ox = r.left - zoom.x;               // the slide's unzoomed corner
+    const oy = r.top - zoom.y;
+    if (cx === undefined) { cx = ox + el.offsetWidth / 2; cy = oy + el.offsetHeight / 2; }
+    const px = (cx - r.left) / zoom.s;        // that point, in unzoomed slide pixels
+    const py = (cy - r.top) / zoom.s;
+    const s = clamp(zoom.s * factor, 1, ZOOM_MAX);
+    if (s <= 1.001) { resetZoom(animate); return; }
+    setZoom(s, cx - ox - px * s, cy - oy - py * s, animate);
+  }
+
+  stage.addEventListener("dblclick", (e) => {
+    if (e.target.closest("a, button, input, select, textarea, video")) return;
+    if (zoomed()) resetZoom(true);
+    else zoomAt(2, e.clientX, e.clientY, true);
+  });
+
   /* ---------- Pointer: drag / swipe ---------- */
   // Keep native image dragging from cancelling the slide gesture.
   stage.addEventListener("dragstart", (e) => e.preventDefault());
@@ -200,6 +267,10 @@
   stage.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 || drag) return;
     if (e.target.closest("a, button, input, select, textarea")) return;
+    if (zoomed()) {                    // zoomed in: dragging pans the slide instead of paging
+      drag = { pan: true, id: e.pointerId, x0: e.clientX, y0: e.clientY, zx: zoom.x, zy: zoom.y, active: false };
+      return;
+    }
     const wasMoving = raf !== 0;
     stop(); // catch it mid-flight: it holds at its on-screen value
     drag = {
@@ -219,6 +290,17 @@
     if (!drag || e.pointerId !== drag.id) return;
     const dx = e.clientX - drag.x0;
     const dy = e.clientY - drag.y0;
+
+    if (drag.pan) {
+      if (!drag.active) {
+        if (Math.hypot(dx, dy) < DRAG_SLOP) return;
+        drag.active = true;
+        try { stage.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+        stage.classList.add("is-dragging");
+      }
+      setZoom(zoom.s, drag.zx + dx, drag.zy + dy, false);
+      return;
+    }
 
     if (!drag.active) {
       if (Math.hypot(dx, dy) < DRAG_SLOP) return;
@@ -244,6 +326,13 @@
     drag = null;
     stage.classList.remove("is-dragging");
     if (!d) return;
+    if (d.pan) {
+      if (d.active) {                  // a pan is not a click
+        swallowClick = true;
+        setTimeout(() => { swallowClick = false; }, 60);
+      }
+      return;
+    }
 
     if (!d.active) {
       if (d.wasMoving) goTo(index); // a tap that caught a moving slide: let it finish
@@ -280,11 +369,19 @@
   }
 
   stage.addEventListener("wheel", (e) => {
-    if (e.ctrlKey) return; // pinch-zoom
     const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? width : 1;
     const dx = e.deltaX * unit;
     const dy = e.deltaY * unit;
     e.preventDefault();
+
+    if (e.ctrlKey || e.metaKey) {      // trackpad pinch arrives as Ctrl + wheel: zoom the slide, not the page
+      zoomAt(Math.exp(-clamp(dy, -60, 60) * 0.005), e.clientX, e.clientY, false);   // ~1.35× per mouse-wheel notch
+      return;
+    }
+    if (zoomed()) {                    // zoomed in: scrolling pans
+      setZoom(zoom.s, zoom.x - dx, zoom.y - dy, false);
+      return;
+    }
 
     if (Math.abs(dx) > Math.abs(dy) && !reduced && !drag) {
       if (!wheel) {
@@ -336,7 +433,18 @@
       setTimeout(handleFullscreenChange, 250);
       return;
     }
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || drag) return;
+    if (e.defaultPrevented || e.altKey || drag) return;
+
+    // Zoom keys, with or without Ctrl/⌘: they zoom the slide instead of the page
+    switch (e.key) {
+      case "+": case "=": zoomAt(1.25, undefined, undefined, true); e.preventDefault(); return;
+      case "-": case "_": zoomAt(0.8, undefined, undefined, true); e.preventDefault(); return;
+      case "0": resetZoom(true); e.preventDefault(); return;
+      case "Escape": if (zoomed()) { resetZoom(true); e.preventDefault(); } return;
+      default: break;
+    }
+
+    if (e.metaKey || e.ctrlKey) return;
     const onControl = e.target.closest && e.target.closest("a, button, input, select, textarea");
     switch (e.key) {
       case "ArrowRight": case "ArrowDown": case "PageDown": next(); break;
@@ -506,10 +614,13 @@
   }
 
   /* ---------- Resize, deep links ---------- */
-  new ResizeObserver(() => {
-    width = stage.clientWidth || 1;
+  const onResize = () => {
+    resetZoom(false); // the zoom is in pixels: a new window size starts from the whole slide
+    measure();
     render(spring.value);
-  }).observe(stage);
+  };
+  new ResizeObserver(onResize).observe(stage);
+  window.addEventListener("resize", onResize); // the bleed can change while the stage keeps its size
 
   window.addEventListener("hashchange", () => {
     const i = indexFromHash();

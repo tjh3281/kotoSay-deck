@@ -3,3 +3,4 @@
 Edit slides in `src/slides/`, styles in `src/styles/`, photos in `src/assets/`.
 Then run `python build.py` (Python 3, no packages) and rename the output `kotosay-pitch.html` to `index.html`.
 Present: open index.html, press F for full screen, arrow keys to move.
+Zoom into a slide: pinch, Ctrl + scroll, + / −, or double-click; drag to look around; 0 or Esc resets.
