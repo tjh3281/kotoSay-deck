@@ -311,8 +311,31 @@
     goTo(index + (delta > 0 ? 1 : -1));
   }, { passive: false });
 
+  /* ---------- Fullscreen & controls visibility ---------- */
+  const displayModeMQ = window.matchMedia("(display-mode: fullscreen)");
+  let isCurrentlyFullscreen = false;
+
+  function isFullscreen() {
+    return Boolean(document.fullscreenElement) ||
+      displayModeMQ.matches ||
+      (Math.abs(window.innerHeight - screen.height) <= 1 && Math.abs(window.innerWidth - screen.width) <= 1);
+  }
+
+  function hideChromeNow() {
+    clearTimeout(idleTimer);
+    if (chrome.contains(document.activeElement)) document.activeElement.blur();
+    chrome.classList.add("is-hidden");
+    document.body.classList.add("is-idle");
+  }
+
   /* ---------- Keyboard & presenter clickers ---------- */
   document.addEventListener("keydown", (e) => {
+    if (e.key === "F11") {
+      // Browser toggles fullscreen on F11; schedule check to update bar visibility
+      setTimeout(handleFullscreenChange, 80);
+      setTimeout(handleFullscreenChange, 250);
+      return;
+    }
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || drag) return;
     const onControl = e.target.closest && e.target.closest("a, button, input, select, textarea");
     switch (e.key) {
@@ -336,35 +359,59 @@
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       const req = document.documentElement.requestFullscreen;
-      if (req) req.call(document.documentElement).catch(() => {});
+      if (req) {
+        req.call(document.documentElement)
+          .then(() => hideChromeNow())
+          .catch(() => {});
+      }
     } else if (document.exitFullscreen) {
-      document.exitFullscreen();
+      document.exitFullscreen().catch(() => {});
     }
   }
-  document.addEventListener("fullscreenchange", () => {
-    btnFull.setAttribute("aria-label", document.fullscreenElement ? "Exit full screen (F)" : "Enter full screen (F)");
-  });
+
+  function handleFullscreenChange() {
+    const active = isFullscreen();
+    if (active === isCurrentlyFullscreen) return;
+    isCurrentlyFullscreen = active;
+    btnFull.setAttribute("aria-label", active ? "Exit full screen (F)" : "Enter full screen (F)");
+    if (active) {
+      hideChromeNow();
+    } else {
+      wake();
+    }
+  }
+
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  if (displayModeMQ.addEventListener) {
+    displayModeMQ.addEventListener("change", handleFullscreenChange);
+  }
+  window.addEventListener("resize", handleFullscreenChange);
 
   /* Controls float in, then step aside while you present */
   let idleTimer = 0;
   function wake() {
+    if (isFullscreen()) return; // In fullscreen mode, mouse movement will not bring it back
     chrome.classList.remove("is-hidden");
     document.body.classList.remove("is-idle");
     clearTimeout(idleTimer);
     idleTimer = setTimeout(sleep, 2600);
   }
   function sleep() {
+    if (isFullscreen()) {
+      hideChromeNow();
+      return;
+    }
     if (chrome.matches(":hover") || chrome.querySelector(":focus-visible")) {
       idleTimer = setTimeout(sleep, 1500);
       return;
     }
-    if (chrome.contains(document.activeElement)) document.activeElement.blur();
-    chrome.classList.add("is-hidden");
-    document.body.classList.add("is-idle");
+    hideChromeNow();
   }
   document.addEventListener("pointermove", wake, { passive: true });
   document.addEventListener("pointerdown", wake, { passive: true });
-  chrome.addEventListener("focusin", wake);
+  chrome.addEventListener("focusin", () => {
+    if (!isFullscreen()) wake();
+  });
 
   /* ---------- Demo video ----------
      Plays from the start when its slide arrives, pauses when you leave.
