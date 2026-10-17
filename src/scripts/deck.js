@@ -106,6 +106,8 @@
       s.setAttribute("aria-hidden", off ? "true" : "false");
     });
     syncMedia();
+    // the page around the 16:9 stage takes the slide's colour, so dark slides get no cream bars
+    document.body.classList.toggle("is-dark-slide", slides[index].classList.contains("slide--dark"));
     if (announce) announcer.textContent = `Slide ${index + 1} of ${n}: ${labels[index]}`;
     announce = true;
     const hash = `#${index + 1}`;
@@ -366,32 +368,83 @@
 
   /* ---------- Demo video ----------
      Plays from the start when its slide arrives, pauses when you leave.
-     Always muted, so it never talks over you, and it loops.
+     Muted and looping by default, so it never talks over you.
+     data-sound: plays with its own sound (the live-demo slide). If the browser
+       refuses sound, it plays muted and the sound button turns pink.
+     data-once: plays once and stops on the last frame; press play to replay.
+     A [data-video-meter] on the same slide shows progress and time.
      Tapping the video pauses it.
      Reduced motion: nothing autoplays; press play. */
+  const clock = (t) => {
+    const s = Math.max(0, Math.round(t || 0));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+
   const media = slides.map((s) => Array.from(s.querySelectorAll("video[data-autoplay]")).map((video) => {
     const phone = video.closest(".phone") || video.parentElement;
     const playBtn = phone.querySelector(".phone__play");
+    const once = video.hasAttribute("data-once");
+    const meter = video.hasAttribute("data-sound") ? s.querySelector("[data-video-meter]") : null;
     const m = { video };
-    video.muted = true;
+    video.muted = !video.hasAttribute("data-sound");
+
+    const showMuted = () => {
+      if (!meter) return;
+      meter.classList.toggle("is-muted", video.muted);
+      const btn = meter.querySelector("[data-video-sound]");
+      if (btn) btn.setAttribute("aria-label", video.muted ? "Unmute demo" : "Mute demo");
+    };
 
     m.play = (fromStart) => {
       if (fromStart) {
         try { video.currentTime = 0; } catch (_) { /* not seekable yet */ }
       }
       const p = video.play();
-      if (p && p.catch) p.catch(() => phone.classList.add("is-paused"));
+      if (p && p.catch) p.catch((err) => {
+        if (video.muted || !err || err.name !== "NotAllowedError") { phone.classList.add("is-paused"); return; }
+        video.muted = true;                       // sound refused: play silently instead
+        showMuted();
+        video.play().catch(() => phone.classList.add("is-paused"));
+      });
     };
 
     video.addEventListener("play", () => phone.classList.remove("is-paused"));
     video.addEventListener("pause", () => { if (!video.ended) phone.classList.add("is-paused"); });
     video.addEventListener("ended", () => {
+      if (once) { phone.classList.add("is-paused"); return; }
       video.currentTime = 0;
       video.play().catch(() => phone.classList.add("is-paused"));
     });
     video.addEventListener("click", () => { if (video.paused) m.play(false); else video.pause(); });
     if (playBtn) playBtn.addEventListener("click", () => m.play(false));
     phone.classList.add("is-paused");
+
+    // the phone takes the recording's own shape, so nothing is cropped
+    const fitShape = () => {
+      if (video.videoWidth && video.videoHeight) phone.style.setProperty("--ar", `${video.videoWidth} / ${video.videoHeight}`);
+    };
+    video.addEventListener("loadedmetadata", fitShape);
+    fitShape();
+
+    if (meter) {
+      const fill = meter.querySelector(".demo__fill");
+      const now = meter.querySelector("[data-video-time]");
+      const total = meter.querySelector("[data-video-duration]");
+      const soundBtn = meter.querySelector("[data-video-sound]");
+      let raf = 0;
+      const draw = () => {
+        const d = video.duration || 0;
+        if (fill) fill.style.setProperty("--p", d ? String(Math.min(1, video.currentTime / d)) : "0");
+        if (now) now.textContent = clock(video.currentTime);
+        if (total && d && isFinite(d)) total.textContent = clock(d);
+      };
+      const tick = () => { draw(); raf = video.paused ? 0 : requestAnimationFrame(tick); };
+      video.addEventListener("play", () => { if (!raf) raf = requestAnimationFrame(tick); });
+      ["loadedmetadata", "seeked", "pause", "ended", "timeupdate"].forEach((e) => video.addEventListener(e, draw));
+      if (soundBtn) soundBtn.addEventListener("click", () => { video.muted = !video.muted; showMuted(); });
+      draw();
+      showMuted();
+    }
     return m;
   }));
 

@@ -39,6 +39,12 @@ body.is-idle { cursor: none; }
   padding: 4.75cqw 6.25cqw 6.25cqw;
 }
 
+/* ---------- Letterbox colour ----------
+   When the window isn't exactly 16:9, the page shows around the stage.
+   On dark slides it turns dark too, so there are no cream bars above and below. */
+body { transition: background-color 0.45s var(--ease-out); }
+body.is-dark-slide { background: #07090d; }
+
 /* ---------- Entrance reveals (not gesture-driven, so CSS is fine) ---------- */
 [data-reveal] {
   opacity: 0;

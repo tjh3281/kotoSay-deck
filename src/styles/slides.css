@@ -221,6 +221,154 @@
 .phone.is-paused .phone__play:active { transform: scale(0.94); transition-duration: 0s; }
 .phone__play svg { width: 2cqw; height: 2cqw; margin-left: 0.25cqw; fill: currentColor; }
 
+/* ---------- 04b · Live demo: the real app, one minute, in the middle ----------
+   The phone sits dead centre and takes the video's own shape (--ar, set from the file
+   by deck.js), so nothing in the recording is cropped. Voice waves leave it on both
+   sides: violet out (sign → voice), pink back (text → sign). 実演, "live demo",
+   is stamped beside the title and written large and faint behind the phone. */
+.demo {
+  --phone-h: 41cqw;
+  align-items: center; justify-content: center;
+  padding-top: 3.4cqw; padding-bottom: 3.4cqw;
+}
+.demo__glow {
+  position: absolute; left: 50%; top: 50%;
+  width: 62cqw; height: 46cqw;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(closest-side at 30% 50%, var(--sign-glow), rgba(122, 79, 231, 0) 100%),
+    radial-gradient(closest-side at 70% 50%, rgba(224, 92, 151, 0.14), rgba(224, 92, 151, 0) 100%);
+  pointer-events: none;
+}
+.demo__watermark {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -52%);
+  display: flex; gap: 22cqw;
+  font-size: 30cqw; line-height: 1; color: var(--ink-1); opacity: 0.028;
+  pointer-events: none; user-select: none;
+}
+
+/* title in the corner, like every slide */
+.demo__text { position: absolute; left: 6.25cqw; top: 4.75cqw; z-index: 2; }
+.demo__eyebrow { display: flex; align-items: center; gap: 0.7cqw; }
+.demo__rec {                                /* a recording light */
+  flex: none; width: 0.75cqw; height: 0.75cqw; border-radius: 50%;
+  background: var(--stamp);
+  box-shadow: 0 0 0 0 rgba(200, 50, 95, 0.45);
+}
+.slide.is-visible .demo__rec { animation: demo-rec 1.6s ease-out infinite; }
+@keyframes demo-rec {
+  0% { box-shadow: 0 0 0 0 rgba(200, 50, 95, 0.45); }
+  70% { box-shadow: 0 0 0 0.7cqw rgba(200, 50, 95, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 50, 95, 0); }
+}
+.demo__titlerow { display: flex; align-items: center; gap: 1.6cqw; }
+.demo__big {
+  font-family: var(--font-display);
+  font-size: 4.2cqw; line-height: 1.06; letter-spacing: -0.035em; font-weight: 700;
+  color: var(--ink-1);
+}
+.demo__key {
+  background: var(--voice); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  padding-bottom: 0.1em;
+}
+.demo__seal.stamp { position: relative; right: auto; top: auto; font-size: 2cqw; padding: 0.3cqw 0.5cqw 0.42cqw; border-width: 0.24cqw; }
+.demo__seal[data-reveal] { transform: rotate(-8deg) scale(1.8); }
+.slide.is-visible .demo__seal[data-reveal] { transform: rotate(-8deg); }
+
+/* the device row: waves · phone · waves, with the meter under the phone */
+.demo__device { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.5cqw; }
+.demo__phone {
+  width: auto; height: var(--phone-h);
+  box-shadow:
+    0 0 0 1px rgba(23, 21, 15, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 0 0 0.35cqw rgba(255, 252, 246, 0.9),
+    0 0 0 0.45cqw rgba(196, 176, 255, 0.5),
+    0 0 2.6cqw rgba(196, 176, 255, 0.55),
+    0 0 6cqw rgba(247, 182, 212, 0.35),
+    0 3cqw 6cqw rgba(23, 21, 15, 0.22);
+}
+.demo__phone .phone__screen { height: 100%; width: auto; aspect-ratio: var(--ar, 640 / 1386); }
+.demo__phone .phone__play { width: 6cqw; height: 6cqw; margin: -3cqw 0 0 -3cqw; }
+.demo__phone .phone__play svg { width: 2.4cqw; height: 2.4cqw; }
+
+.demo__side {
+  position: absolute; top: calc(var(--phone-h) / 2); width: 22cqw;
+  display: flex; flex-direction: column; gap: 1.2cqw;
+  transform: translateY(-34%);
+}
+.demo__side--sign { right: calc(100% + 1.8cqw); align-items: flex-end; text-align: right; }
+.demo__side--reply { left: calc(100% + 1.8cqw); align-items: flex-start; text-align: left; }
+.demo__waves { width: 10.5cqw; height: auto; overflow: visible; fill: none; stroke-width: 5; stroke-linecap: round; }
+.demo__side--sign .demo__waves { stroke: var(--sign); }
+.demo__side--reply .demo__waves { stroke: var(--reply); transform: scaleX(-1); }
+.demo__waves path { opacity: 0.2; }
+.slide.is-visible .demo__waves path { animation: demo-wave-out 2.4s ease-out infinite; }
+.demo__waves path:nth-child(2) { animation-delay: 0.25s !important; }
+.demo__waves path:nth-child(3) { animation-delay: 0.5s !important; }
+.demo__waves path:nth-child(4) { animation-delay: 0.75s !important; }
+.demo__side--reply .demo__waves path { animation-delay: 1.2s; }
+.demo__side--reply .demo__waves path:nth-child(2) { animation-delay: 1.45s !important; }
+.demo__side--reply .demo__waves path:nth-child(3) { animation-delay: 1.7s !important; }
+.demo__side--reply .demo__waves path:nth-child(4) { animation-delay: 1.95s !important; }
+@keyframes demo-wave-out { 0% { opacity: 0.2; } 18% { opacity: 1; } 55%, 100% { opacity: 0.2; } }
+
+.demo__label { color: var(--sign-ink); font-family: var(--font-display); font-size: 1.7cqw; line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+.demo__label span { display: block; margin-top: 0.35cqw; font-family: var(--font); font-size: 1.15cqw; line-height: 1.3; letter-spacing: 0; font-weight: 500; color: var(--ink-3); }
+.demo__side--reply .demo__label { color: var(--reply-ink); }
+
+/* sound · progress · time, in the deck's floating paper pill */
+.demo__meter {
+  align-self: stretch;
+  display: flex; align-items: center; gap: 0.9cqw;
+  padding: 0.45cqw 1.2cqw 0.45cqw 0.45cqw; border-radius: 999px;
+  background: rgba(255, 252, 246, 0.74);
+  -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(23, 21, 15, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0.6cqw 1.8cqw rgba(23, 21, 15, 0.10);
+}
+.demo__sound {
+  flex: none; display: grid; place-items: center;
+  width: 2.3cqw; height: 2.3cqw; padding: 0; border: 0; border-radius: 50%;
+  background: var(--surface-2); color: var(--ink-1); cursor: pointer;
+  transition: transform 0.1s ease-out, background-color 0.15s ease-out;
+}
+.demo__sound:hover { background: var(--surface-3); }
+.demo__sound:active { transform: scale(0.92); transition-duration: 0s; }
+.demo__sound svg { width: 1.35cqw; height: 1.35cqw; stroke-width: 1.8; }
+.demo__sound-off { display: none; }
+.demo__meter.is-muted .demo__sound-on { display: none; }
+.demo__meter.is-muted .demo__sound-off { display: block; }
+.demo__meter.is-muted .demo__sound { color: #ffffff; background: var(--reply); }
+.demo__bar {
+  position: relative; flex: 1 1 0; height: 0.32cqw; border-radius: 999px; overflow: hidden;
+  background: var(--hairline-strong);
+}
+.demo__fill {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: var(--voice);
+  transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+}
+.demo__time { flex: none; font-size: 1.05cqw; line-height: 1; color: var(--ink-3); white-space: nowrap; }
+.demo__time .num:first-child { color: var(--ink-1); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide.is-visible .demo__rec, .slide.is-visible .demo__waves path { animation: none; }
+  .demo__waves path { opacity: 0.6; }
+  .demo__seal[data-reveal] { transform: rotate(-8deg); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .demo__meter { background: #fffcf6; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media print {
+  .demo__rec, .demo__waves path { animation: none !important; }
+  .demo__waves path { opacity: 0.6 !important; }
+  .demo__seal[data-reveal] { opacity: 0.92 !important; transform: rotate(-8deg) !important; }
+  .demo__sound { visibility: hidden; }
+}
+
 /* ---------- 05 · How it works: one conversation, both directions ----------
    The headline carries the point; one quiet map shows the loop; one line answers WFD & WASLI. */
 .how { justify-content: space-between; }
@@ -929,6 +1077,7 @@
   font-family: var(--font-display);
   font-size: 2.1cqw; line-height: 1.2; letter-spacing: -0.02em; font-weight: 700; color: var(--ink-1);
 }
+.tested__next p .voice-text { white-space: nowrap; }   /* keep "long-term partnership" on one line */
 
 @media (prefers-reduced-motion: reduce) {
   .tstep__ruler .tstep__ruler-line { stroke-dashoffset: 0; transition: none; }

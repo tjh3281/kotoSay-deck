@@ -1,0 +1,61 @@
+<!-- 04b · Proposed solution — live demo: the real app, one minute, in the middle of the slide.
+     Voice waves go out in violet on the left (sign → voice) and in pink on the right (text → sign).
+     Video: src/assets/video/demo-1min.mp4 (55 s, 640 × 1386, black side bars cropped); poster is a frame at 0:30.
+     To swap it, replace those two files and run python build.py. The phone takes the video's shape and the timer its length. -->
+<section class="slide demo" data-label="Live demo">
+  <div class="demo__glow" aria-hidden="true"></div>
+  <span class="demo__watermark brush" lang="ja" aria-hidden="true"><span>実</span><span>演</span></span>
+
+  <div class="demo__text">
+    <span class="eyebrow demo__eyebrow" data-reveal><i class="demo__rec" aria-hidden="true"></i>Proposed solution</span>
+    <div class="demo__titlerow">
+      <h2 class="demo__big" data-reveal style="--i:1">Live <span class="demo__key">demo.</span></h2>
+      <span class="stamp brush demo__seal" lang="ja" data-reveal style="--i:6" aria-hidden="true">実演</span>
+    </div>
+  </div>
+
+  <div class="demo__device" data-reveal style="--i:2">
+    <!-- left: the signer's words go out as voice -->
+    <div class="demo__side demo__side--sign" aria-hidden="true">
+      <svg class="demo__waves" viewBox="0 0 170 220">
+        <path d="M148.8 88.8 A30 30 0 0 0 148.8 131.2" />
+        <path d="M127.6 67.6 A60 60 0 0 0 127.6 152.4" />
+        <path d="M106.4 46.4 A90 90 0 0 0 106.4 173.6" />
+        <path d="M85.1 25.1 A120 120 0 0 0 85.1 194.9" />
+      </svg>
+      <p class="demo__label">Sign → voice<span>with emotion, in a lively voice</span></p>
+    </div>
+
+    <div class="phone demo__phone">
+      <div class="phone__screen">
+        <video class="phone__video" data-autoplay data-sound data-once playsinline preload="auto"
+               src="assets/video/demo-1min.mp4"
+               poster="assets/video/demo-1min-poster.jpg"
+               aria-label="kotoSay live demo, one minute: a Deaf signer signs in Japanese Sign Language and the app speaks the words aloud."></video>
+        <button class="phone__play" type="button" aria-label="Play demo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- right: the reply comes back as sign -->
+    <div class="demo__side demo__side--reply" aria-hidden="true">
+      <svg class="demo__waves" viewBox="0 0 170 220">
+        <path d="M148.8 88.8 A30 30 0 0 0 148.8 131.2" />
+        <path d="M127.6 67.6 A60 60 0 0 0 127.6 152.4" />
+        <path d="M106.4 46.4 A90 90 0 0 0 106.4 173.6" />
+        <path d="M85.1 25.1 A120 120 0 0 0 85.1 194.9" />
+      </svg>
+      <p class="demo__label">Text → sign<span>a 3D avatar signs back</span></p>
+    </div>
+
+    <div class="demo__meter" data-video-meter>
+      <button class="demo__sound" type="button" aria-label="Mute demo" data-video-sound>
+        <svg class="icon demo__sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.5h3l4.5-4v13l-4.5-4h-3z" /><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a7.8 7.8 0 0 1 0 11" /></svg>
+        <svg class="icon demo__sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 9.5h3l4.5-4v13l-4.5-4h-3z" /><path d="M16 9.5l5 5M21 9.5l-5 5" /></svg>
+      </button>
+      <span class="demo__bar" aria-hidden="true"><span class="demo__fill"></span></span>
+      <span class="demo__time" aria-hidden="true"><i class="num" data-video-time>0:00</i><span> / </span><i class="num" data-video-duration>1:00</i></span>
+    </div>
+  </div>
+</section>
